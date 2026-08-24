@@ -105,6 +105,42 @@ correct in general." See `ai_skill_audit.md`.
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
 
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug design,
+hidden tests, reference solution, or evaluator notes. Result: it correctly
+diagnosed the currency-blind cache key, correctly used the already-passing
+"pricing client differentiates by currency" test as evidence ruling out
+the wrong hypothesis, and — when explicitly prompted by the simulation
+instructions to think about composite-key construction (see below) —
+chose a collision-safe key (`JSON.stringify([productId, currency])`) over
+naive delimited concatenation, in an estimated 30-50 minutes, inside the
+60-75 minute timebox.
+
+**No revision needed, but one methodology note worth recording:** the
+simulation's own instructions (written by the orchestrator to probe
+whether the collision-safety angle is discoverable at all) included a
+direct nudge — "what happens if you just concatenate strings together?"
+— that is NOT present anywhere in the actual candidate-facing
+`README.md` or `SKILL.md` (grepped for "concatenat", "delimiter",
+"collision": zero matches in both). The solver explicitly flagged that
+without such a nudge, a plain delimited-concatenation fix (`` `${a}:${b}`
+``) would pass every PUBLIC test and "look done," and that the delimiter-
+collision hidden test is what's actually responsible for catching that —
+exactly as designed: this is hidden-test-carried signal, not something the
+public materials are supposed to spell out, so no candidate-facing change
+was warranted. It also independently rated the bug itself as easy to spot
+by inspection alone (an unused function parameter) — consistent with this
+project's documented design (`bug_design.md` calls this "the tell" on
+purpose) and with this curriculum's established pattern that AI-agent
+solve times run faster than the human timebox without indicating
+miscalibration (see `MASTER_EVALUATOR.md` §8).
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits
+to `candidate/` were reverted after the simulation, restoring the original
+buggy starting state, re-verified at 2 failed / 10 passed.)
+
 ## Validation record (this build)
 
 No separate isolated fresh-solver agent pass was run for this project (that
