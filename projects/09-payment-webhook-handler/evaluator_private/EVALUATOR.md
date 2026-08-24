@@ -84,3 +84,39 @@ See `ai_skill_audit.md`.
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug design,
+hidden tests, reference solution, or evaluator notes. Result: it correctly
+diagnosed the unused-`has_seen` root cause and correctly scoped its fix to
+`event_id` rather than order status, explicitly noting it preserved the
+split-payment case.
+
+**Finding that caused a revision:** it solved the exercise in an estimated
+20-35 minutes and rated the *actual* difficulty closer to 4-5/10 than the
+stated 8/10, attributing this specifically to `EventLogRepository.has_seen`'s
+docstring, which originally read "whether this exact event_id has been
+recorded before (i.e. this delivery, if it turns out to be a 'succeeded'
+event, would be a retry of one we've already processed)" — the parenthetical
+essentially states the diagnostic conclusion outright once a candidate opens
+the file at all, collapsing most of the intended reasoning work. **Fix
+applied:** trimmed the docstring to the plain factual statement ("Whether
+this exact event_id has been recorded before.") with no interpretive
+hand-holding, matching how Project 7's analogous "unused correctly-scoped
+helper" pattern was written (which its own solver simulation found
+appropriately challenging at the stated difficulty, 35-50 minutes, with no
+leakage concern raised). The remaining docstrings on `record()`/
+`entries_for_event()` were left as-is — they state necessary audit-trail
+behavior the candidate needs to know is intentional (not a hint about the
+service-layer bug). Public test pass/fail split re-verified unchanged (1
+failed / 8 passed) after the edit. Note: this revision was not
+re-validated with a second solver simulation (would be a second full
+run); the change is narrowly scoped (one docstring sentence) and directly
+addresses the specific mechanism the first simulation flagged, following
+the same pattern already validated as adequate on Project 7.
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits to
+`candidate/` were reverted after the simulation, then the docstring fix was
+applied and re-validated, restoring the original buggy starting state.)

@@ -13,10 +13,7 @@ class EventLogRepository:
         self._log: list[PaymentEventIn] = []
 
     def has_seen(self, event_id: str) -> bool:
-        """Whether this exact event_id has been recorded before (i.e. this
-        delivery, if it turns out to be a "succeeded" event, would be a
-        retry of one we've already processed).
-        """
+        """Whether this exact event_id has been recorded before."""
         return event_id in self._seen_event_ids
 
     def record(self, event: PaymentEventIn) -> None:
