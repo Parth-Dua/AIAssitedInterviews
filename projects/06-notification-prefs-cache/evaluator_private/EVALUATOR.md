@@ -100,3 +100,29 @@ has to drive the design decision and verify it themselves. See
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug design,
+hidden tests, reference solution, or evaluator notes. Result: it correctly
+diagnosed the missing cache-invalidation-on-write root cause and correctly
+implemented TTL (including the `>=` expiry boundary) using the injectable
+clock, in an estimated 45-65 minutes — inside the 60-75 minute timebox.
+
+**Finding that caused a revision:** `Cache`'s docstring originally included
+a `# TODO: ... set(key, value, ttl_seconds=...)` comment prescribing the
+TTL method's exact signature — a milder version of the spoiler pattern
+already caught and fixed in Project 5. Since the README's feature request
+already fully specifies "entries should expire after a configurable number
+of seconds," the code comment wasn't needed for the candidate to understand
+*what* to build, only made *how* to name the parameter free. **Fix
+applied:** removed the TODO/signature line from the docstring, keeping only
+the legitimate clock-injection note (which explains real, load-bearing
+existing code, not a hint about the gap). Public test pass/fail split
+re-verified unchanged (2 failed / 12 passed) after the edit.
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits to
+`candidate/` were reverted after the simulation, then the docstring fix was
+applied and re-validated, restoring the original buggy/incomplete starting
+state.)

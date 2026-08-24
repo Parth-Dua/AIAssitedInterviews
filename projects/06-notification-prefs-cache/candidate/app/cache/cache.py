@@ -7,14 +7,9 @@ class Cache:
     that would sit in front of a real database in production. Pure
     Python, dict-backed — no external cache server required.
 
-    The clock used for any future time-based behavior is injectable via
-    `now_fn` (defaults to `time.monotonic`) so callers/tests can control
-    time deterministically instead of relying on real wall-clock sleeps.
-
-    # TODO: entries never expire yet. Add TTL (time-to-live) support so a
-    # cached entry automatically falls out after a configurable number of
-    # seconds: `set(key, value, ttl_seconds=...)`, and `get()` should treat
-    # an expired entry as a miss and evict it.
+    The clock is injectable via `now_fn` (defaults to `time.monotonic`) so
+    callers/tests can control time deterministically instead of relying on
+    real wall-clock sleeps.
     """
 
     def __init__(self, now_fn: Callable[[], float] = time.monotonic):
