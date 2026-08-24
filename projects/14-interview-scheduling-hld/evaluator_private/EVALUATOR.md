@@ -102,3 +102,37 @@ the way a light check-in is for a debugging project.
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's worksheet and their live/verbal follow-up answers only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34, adapted for an HLD project: an isolated agent received
+only `candidate/README.md`, `candidate/.ai/assessment-skill/SKILL.md`, and
+repo access — no reference design, design brief, or evaluator notes. It
+produced a substantive design (range-exclusion DB constraint for the
+double-booking race, transactional outbox for durable notification
+delivery, explicit rejection of microservices/sharding as unneeded at the
+stated scale) and correctly solved the bonus algorithm (4/4 tests passing
+on first attempt: merge → complement against work hours → pairwise
+intersect → duration filter). Estimated time: 45-60 minutes for a solid
+pass, comfortably matching the stated timebox.
+
+No leakage was found: it confirmed neither the README nor SKILL.md names a
+specific consistency mechanism (no "unique constraint," "outbox," or
+"exclusion constraint" anywhere in candidate-facing text), and specifically
+credited SKILL.md's instruction that the assistant must not introduce such
+terms unprompted as an effective guardrail — it had to derive the DB
+mechanism itself. It confirmed the "not internet-scale" framing landed
+correctly (no pull toward over-engineering) and that the scope, while
+comprehensive across 12 worksheet sections, is bounded by explicit
+non-goals rather than open-ended sprawl. One observation, not a defect:
+the double-booking race is named directly in the prompt itself (by
+design — it's meant to be the centerpiece), so the signal tested is
+reasoning about *why* app-level check-then-act fails and *which* DB
+mechanism actually prevents it, not whether the candidate notices the race
+unprompted; this matches the exercise's intent and required no change.
+
+No revisions to the exercise were needed. It confirmed it never accessed
+anything outside `candidate/`. (Its worksheet content and bonus
+implementation were reverted after the simulation, restoring the original
+starting state — bonus stub re-verified at 4/4 failing with
+`NotImplementedError`.)
