@@ -82,3 +82,23 @@ confirmation, and verification themselves. See `ai_skill_audit.md`.
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug design,
+hidden tests, reference solution, or evaluator notes. Result: it correctly
+diagnosed the unscoped-role-lookup root cause (immediately noticing
+`can_manage_document` used `get_memberships_for_user` where its siblings
+used the correctly-scoped `get_membership`), correctly implemented the
+viewer role without overcorrecting (explicitly kept the
+workspace-owner-manages-any-document-in-their-workspace behavior and added
+its own regression test for it), and did so in an estimated 35-50 minutes —
+inside the 60-75 minute timebox. No spoiler issues were found this time —
+it explicitly noted the docstring ambiguity on `can_manage_document` reads
+as intentional subtlety rather than a leak, and confirmed the failing-test
+evidence was fully sufficient without hints. It confirmed it never accessed
+anything outside `candidate/`. No revisions to the exercise were needed.
+(Its edits to `candidate/` were reverted after the simulation, restoring
+the original buggy/incomplete starting state, re-verified at 3 failed / 10
+passed.)

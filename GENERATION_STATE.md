@@ -17,7 +17,7 @@ REVISE → FINALIZE.
 | 4 | support-ticket-queue | done | done | done (2 fail/6 pass, deterministic) | done (12/12 pass; half-fix fails 1) | done (no leakage) | done (correctly solved, ~15-25min, no leakage found, no out-of-scope access) | done | done |
 | 5 | inventory-reservations | done | done | done (3 fail/5 pass) | done (12/12 pass; filter-after-paginate fails 2) | done (no leakage) | done (solved correctly; found+fixed a spoiler TODO comment) | done | done |
 | 6 | notification-prefs-cache | done | done | done (2 fail/12 pass) | done (19/19 pass; cache-request-body fix fails 1) | done (no leakage) | done (solved correctly; found+fixed a spoiler TODO in cache.py docstring) | done | done |
-| 7 | team-workspace-permissions | pending | | | | | | | |
+| 7 | team-workspace-permissions | done | done | done (3 fail/10 pass) | done (18/18 pass; overcorrection fails 4) | done (no leakage) | done (solved correctly, ~35-50min, no leakage, no out-of-scope access) | done | done |
 | 8 | coupon-redemption | pending | | | | | | | |
 | 9 | payment-webhook-handler | pending | | | | | | | |
 | 10 | async-job-worker-pool | pending | | | | | | | |
