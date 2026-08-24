@@ -1,0 +1,17 @@
+assessment:
+  title: "Interview Scheduling Service — System Design"
+  type: hld
+  time_limit_minutes: 60
+
+ai:
+  mode: guarded
+  instructions: "candidate/.ai/assessment-skill/SKILL.md"
+
+candidate_access:
+  - "candidate/README.md"
+  - "candidate/DESIGN_WORKSHEET.md"
+  - "candidate/bonus/**"
+  - "candidate/.ai/**"
+
+blocked_access:
+  - "evaluator_private/**"
