@@ -100,3 +100,34 @@ fully and correctly fixed." See `ai_skill_audit.md`.
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34 (and this project's build brief, applying the same standard
+established for the Node track): an isolated agent received only
+`candidate/README.md`, `candidate/.ai/assessment-skill/SKILL.md`, and repo
+access — no bug design, hidden tests, reference solution, or evaluator
+notes. Result: it correctly diagnosed the unhandled-promise-rejection root
+cause, correctly ruled out the notifier-hangs hypothesis using the isolated
+unit test as evidence, and — notably — chose the `next(err)` fix over a
+direct-response shortcut specifically because it reasoned through why the
+shortcut would diverge from the app's established error contract, then
+added its own regression test guarding exactly that. All in an estimated
+30-50 minutes — inside the 45-60 minute timebox. It independently confirmed
+the hang-reproduction test is fast (~2.8s for the full suite) and fully
+deterministic across its multiple runs, validating the build's
+determinism engineering.
+
+**Finding that caused a revision:** this project was built before Project
+16's SKILL.md was fixed for a similar finding, so it inherited the same
+leftover "Python, FastAPI, Pydantic" wording from the original Python-track
+template in two spots — harmless (not a leak) but a copy-paste
+inconsistency in a TypeScript/Express project. **Fix applied:** genericized
+both lines to match Project 16's corrected wording, restoring the
+byte-for-byte-reusable-across-tracks property of the shared SKILL.md body.
+Public test pass/fail split re-verified unchanged (1 failed / 7 passed)
+after the edit — SKILL.md-only change, no code touched.
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits to
+`candidate/` were reverted after the simulation, then the SKILL.md fix was
+applied and re-validated, restoring the original buggy starting state.)
