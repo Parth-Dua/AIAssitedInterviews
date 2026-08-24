@@ -1,7 +1,10 @@
 # Backend Interview Practice Suite — Curriculum
 
-A private, 15-project curriculum simulating real software-engineering interviews and
+A private, 20-project curriculum simulating real software-engineering interviews and
 online assessments (SWE Intern / New Grad / Backend / AI-Engineering-with-SWE-signal).
+Projects 1-15 are Python/FastAPI. Projects 16-20 are Node.js/TypeScript/Express,
+purpose-built for Amazon-style repo-based debugging OAs (see §"Node/Express track"
+below) — same conventions, same rigor, different stack.
 
 Every project lives at `projects/NN-slug/` and contains:
 
@@ -49,15 +52,48 @@ interpreter `pip3`/`pip install` targeted.
 | 13 | LLM Request Router | AI-Engineering Backend | Debugging/Implementation | 8/10 | 75-90m | Fallback/retry, deterministic fakes, response caching, async |
 | 14 | Interview Scheduling Service | System Design | HLD | 6/10 (SWE-level) | 45-60m | API/data model, scaling basics, caching, failure handling |
 | 15 | Job Processing Platform (Final) | Integrated Debugging | Debugging (+small feature) | 9/10 | 75-90m | Multi-layer root cause, state machine, verification, follow-ups |
+| 16 | Team Task Board API (Node) | AI-Assisted Debugging | Debugging | 6/10 | 45-60m | Express route→controller→service→repo reasoning, partial-update merge bugs |
+| 17 | Order Notification Service (Node) | AI-Assisted Debugging | Debugging | 7/10 | 45-60m | Async Express route error handling, middleware ordering, competing hypotheses |
+| 18 | Shared Playlist API (Node) | Debugging + Feature | Debugging/Implementation | 7/10 | 60-75m | Uniqueness-check bugs, cursor vs. offset pagination |
+| 19 | Product Price Lookup Service (Node) | Advanced Debugging | Debugging | 8/10 | 60-75m | Cache-key construction, external client abstraction, fallback reasoning |
+| 20 | Expense Approval Platform (Final, Node) | Integrated Debugging | Debugging (+feature) | 8.5/10 | 60-90m | Coarse vs. resource-level authorization, feature-driven generalization |
 
 **Distribution:** 8 debugging-heavy (1,2,3,4,5,6,7,9 primary; 15 counted as debugging-heavy
 final), 3 implementation/feature-extension (5,6,8 have substantial feature work; 13 is
 implementation-heavy), 2 LLD (11,12), 1 AI-engineering backend (13), 1 HLD (14). Projects
 5-8 and 15 deliberately combine debugging with implementation, matching real interview
-loops.
+loops. Projects 16-20 (Node/Express) add a second debugging-heavy cluster calibrated
+specifically to Amazon-style repo-debugging OAs: 16-17 are pure debugging, 18 is
+debugging+feature, 19 is advanced multi-layer debugging, 20 is an integrated final
+capstone — mirroring the shape of the Python 1→15 progression at a compressed scale.
 
-Difficulty rises 1→15. Do them roughly in order the first time through; revisit any project
-where your process (not just your final diff) felt weak.
+Difficulty rises 1→15, then rises again 16→20 within the Node track (the Node track is
+not a continuation of the Python difficulty numbers — 16 is comparable to Python's
+fundamentals tier, not to Python 15/16-in-sequence). Do them roughly in order the first
+time through; revisit any project where your process (not just your final diff) felt
+weak. If you're specifically practicing for a Node/Express-based OA (e.g. Amazon-style),
+you can go straight to 16-20 without doing 1-15 first — the Node track is self-contained
+and doesn't assume you've done the Python projects.
+
+## Node/Express track (Projects 16-20)
+
+Stack: Node.js 22, TypeScript (compiled via `ts-jest`, not a separate build step), Express
+4, Jest + Supertest. No database server or native-compiled dependencies are required —
+persistence is an in-memory repository abstraction, the same pattern used throughout the
+Python track, so nothing beyond `npm install` is needed to run any of these.
+
+**Environment note:** every project's `package.json` pins `"typescript": "5.9.x"`
+deliberately — `ts-jest` is incompatible with the TypeScript 7 compiler API, and a bare
+`npm install typescript` on a fresh environment can otherwise resolve to TS7. If you ever
+add or reinstall dependencies and tests start failing with an error mentioning `ts-jest`
+and "does not expose the JavaScript compiler API," reinstall with the pinned version from
+`package.json` rather than upgrading TypeScript.
+
+```
+cd projects/16-team-task-board/candidate
+npm install
+npm test
+```
 
 ## Assessment format (for tooling, not required reading to attempt a project)
 
