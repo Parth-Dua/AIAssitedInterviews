@@ -53,6 +53,22 @@ loops.
 Difficulty rises 1→15. Do them roughly in order the first time through; revisit any project
 where your process (not just your final diff) felt weak.
 
+## Assessment format (for tooling, not required reading to attempt a project)
+
+Every project also has a root-level `assessment.yaml` — a vendor-neutral manifest
+separating **policy** from **enforcement**:
+
+- `SKILL.md` (policy) defines how a compliant AI assistant should *behave*.
+- `assessment.yaml` (enforcement) defines what the assessment environment *permits*:
+  which paths are candidate-visible, which are blocked, the time limit, and where to
+  load the guarded AI instructions from.
+
+This makes it possible for a future runner/CLI to expose only `candidate_access` paths
+to an agent's workspace, inject `SKILL.md` as that agent's instructions, keep
+`blocked_access` paths physically out of reach, enforce the timebox, run public tests,
+and reveal `evaluator_private/` only after submission — with any capable coding agent,
+not a specific vendor. No such runner exists yet; the format alone is the deliverable.
+
 ## Status
 
 See `GENERATION_STATE.md` (build/validation tracker) for which projects are fully built

@@ -34,3 +34,14 @@ REVISE → FINALIZE.
 - Scope calibrated to the lower-middle of the LOC guidance in the master prompt to keep
   15 full, working, validated projects tractable — semantic complexity prioritized over
   line count per rule 10.
+- **Mid-generation update (applied starting Project 1 retrofit, standard for all
+  subsequent projects):** every project gets a root-level `assessment.yaml` (vendor
+  neutral: `assessment.title/type/time_limit_minutes`, `ai.mode: guarded` +
+  `ai.instructions` pointing at the project's SKILL.md, `candidate_access` listing the
+  `candidate/**` paths, `blocked_access: ["evaluator_private/**"]`, adapted per project's
+  actual layout). `ai_skill_audit.md` for every project gets an added "Agent portability
+  audit" section (5-point checklist: solvable without Claude specifically; guarded
+  instructions make sense for any capable agent; scoring is model-independent; no
+  proprietary/vendor-specific feature required; a future runner could swap providers
+  without changing the problem). Project 1 retrofitted. Projects built after this point
+  include both from the start.
