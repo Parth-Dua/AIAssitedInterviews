@@ -1,0 +1,20 @@
+assessment:
+  title: "Team Task Board API — Update Endpoint Bug"
+  type: debugging
+  time_limit_minutes: 55
+
+ai:
+  mode: guarded
+  instructions: "candidate/.ai/assessment-skill/SKILL.md"
+
+candidate_access:
+  - "candidate/src/**"
+  - "candidate/tests/**"
+  - "candidate/README.md"
+  - "candidate/package.json"
+  - "candidate/tsconfig.json"
+  - "candidate/jest.config.js"
+  - "candidate/.ai/**"
+
+blocked_access:
+  - "evaluator_private/**"
