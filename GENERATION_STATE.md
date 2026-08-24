@@ -15,7 +15,7 @@ REVISE → FINALIZE.
 | 2 | library-loan-tracker | done | done | done (7 pass/1 fail as designed) | done (13/13 pass; tempting fix fails 1) | done (no leakage) | n/a (calibration project, informal) | done | |
 | 3 | profile-settings-api | pending | | | | | n/a | | |
 | 4 | support-ticket-queue | done | done | done (2 fail/6 pass, deterministic) | done (12/12 pass; half-fix fails 1) | done (no leakage) | done (correctly solved, ~15-25min, no leakage found, no out-of-scope access) | done | done |
-| 5 | inventory-reservations | pending | | | | | | | |
+| 5 | inventory-reservations | done | done | done (3 fail/5 pass) | done (12/12 pass; filter-after-paginate fails 2) | done (no leakage) | done (solved correctly; found+fixed a spoiler TODO comment) | done | done |
 | 6 | notification-prefs-cache | pending | | | | | | | |
 | 7 | team-workspace-permissions | pending | | | | | | | |
 | 8 | coupon-redemption | pending | | | | | | | |

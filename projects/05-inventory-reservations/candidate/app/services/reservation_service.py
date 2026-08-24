@@ -22,8 +22,6 @@ class ReservationService:
         limit: int,
         category: str | None = None,
     ) -> ReservationPage:
-        # TODO(warehouse-app team): category filtering was requested but
-        # is not wired through to the repository yet.
         items = self._repository.list_page(cursor, limit)
         next_cursor = items[-1].sequence if len(items) == limit else None
         return ReservationPage(items=items, next_cursor=next_cursor)

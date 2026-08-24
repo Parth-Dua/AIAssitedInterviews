@@ -84,3 +84,32 @@ verify it themselves. See `ai_skill_audit.md`.
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug design,
+hidden tests, reference solution, or evaluator notes. Result: it correctly
+diagnosed the `>=`/`>` cursor boundary bug and correctly implemented the
+category filter with filter-before-paginate ordering on its first attempt,
+in an estimated 40-55 minutes — inside the 60-75 minute timebox, with most
+time going to writing/verifying tests rather than discovery.
+
+**Finding that caused a revision:** the simulation flagged that
+`reservation_service.py` originally carried a comment reading
+`# TODO(warehouse-app team): category filtering was requested but is not
+wired through to the repository yet.` — this told the candidate exactly
+where the missing feature lived, removing the need to discover it by
+reading the repository. **Fix applied:** the comment was deleted; the
+`category` parameter is still accepted (unused) by `list_reservations`,
+which is realistic ("a stub was started") without narrating the gap. Public
+test pass/fail split re-verified unchanged (3 failed / 5 passed) after the
+edit. The filter-before-vs-after-paginate design reasoning itself was not a
+spoiler concern — that's a genuine design decision the README's stated
+constraint appropriately steers toward without giving away the
+implementation.
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits to
+`candidate/` were reverted after the simulation, then the TODO-comment fix
+was applied and re-validated, restoring the original buggy/incomplete
+starting state.)
