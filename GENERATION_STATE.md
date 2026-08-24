@@ -12,7 +12,7 @@ REVISE → FINALIZE.
 | # | Slug | Design | Candidate built | Public tests behave as intended | Hidden tests + ref solution validated | SKILL.md leakage audit | Solver sim | Realism audit | Committed |
 |---|------|--------|------------------|----------------------------------|-----------------------------------------|--------------------------|------------|----------------|-----------|
 | 1 | orderflow-pricing | done | done | done (8 pass/1 fail as designed) | done (17/17 pass; tempting fix fails 3) | done (no leakage) | n/a (calibration project, done manually) | done | done |
-| 2 | library-loan-tracker | pending | | | | | n/a | | |
+| 2 | library-loan-tracker | done | done | done (7 pass/1 fail as designed) | done (13/13 pass; tempting fix fails 1) | done (no leakage) | n/a (calibration project, informal) | done | |
 | 3 | profile-settings-api | pending | | | | | n/a | | |
 | 4 | support-ticket-queue | pending | | | | | | | |
 | 5 | inventory-reservations | pending | | | | | | | |
