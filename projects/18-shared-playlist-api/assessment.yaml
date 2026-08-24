@@ -1,0 +1,20 @@
+assessment:
+  title: "Shared Playlist API — Duplicate Track Bug + Pagination"
+  type: implementation
+  time_limit_minutes: 70
+
+ai:
+  mode: guarded
+  instructions: "candidate/.ai/assessment-skill/SKILL.md"
+
+candidate_access:
+  - "candidate/src/**"
+  - "candidate/tests/**"
+  - "candidate/README.md"
+  - "candidate/package.json"
+  - "candidate/tsconfig.json"
+  - "candidate/jest.config.js"
+  - "candidate/.ai/**"
+
+blocked_access:
+  - "evaluator_private/**"
