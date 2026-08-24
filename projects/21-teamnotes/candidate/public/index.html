@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TeamNotes</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<header>
+  <h1>TeamNotes</h1>
+  <button id="reset-btn" title="Restore the seeded starting data">Reset</button>
+</header>
+
+<main>
+  <section id="list-view">
+    <div class="list-view-header">
+      <h2>Notes</h2>
+      <button id="new-note-btn">+ New note</button>
+    </div>
+
+    <div id="new-note-form" class="new-note-form hidden">
+      <input id="new-note-title" type="text" placeholder="Title" />
+      <textarea id="new-note-content" placeholder="Content"></textarea>
+      <div class="form-actions">
+        <button id="create-note-btn">Create</button>
+        <button id="cancel-new-note-btn" class="secondary">Cancel</button>
+      </div>
+    </div>
+
+    <ul id="notes-list"></ul>
+  </section>
+
+  <section id="edit-view" class="hidden">
+    <button id="back-btn" class="link-btn">&larr; Back to notes</button>
+    <h2>Edit note</h2>
+    <form id="edit-form">
+      <input type="hidden" id="edit-id" />
+      <input type="hidden" id="edit-version" />
+
+      <label>
+        Title
+        <input id="edit-title" type="text" />
+      </label>
+
+      <label>
+        Content
+        <textarea id="edit-content" rows="6"></textarea>
+      </label>
+
+      <label>
+        Tags (comma-separated)
+        <input id="edit-tags" type="text" />
+      </label>
+
+      <div class="form-actions">
+        <button type="submit">Save</button>
+      </div>
+    </form>
+    <p id="edit-message" class="message"></p>
+  </section>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>
