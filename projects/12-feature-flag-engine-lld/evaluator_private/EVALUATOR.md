@@ -123,3 +123,40 @@ defend the actual design decisions. See `ai_skill_audit.md`.
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's implementation, added tests, and design explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no design
+brief, hidden tests, reference solution, or evaluator notes. Result: it
+implemented all classes correctly (all public tests passed), produced a
+genuinely polymorphic `RuleChain` (proved it by dropping in a novel custom
+rule type it wrote itself), correctly used `hashlib` over `hash()` for
+cross-process determinism, and refactored the bucketing logic into a
+shared helper so `PercentageRolloutFlag` and `PercentageRolloutRule` agree
+— in an estimated 45-70 minutes, inside the 60-90 minute timebox.
+
+**Finding that caused a revision:** it flagged two README passages as
+over-explicit, the same pattern already caught on Project 11: (1) "think
+about how to share that logic between the two without duplicating it" —
+handing the candidate the refactor decision rather than letting the
+duplication smell prompt it; (2) the closing prompt asking whether
+`RuleChain` would work "without changing a single line of `RuleChain`
+itself" for a new rule type — very close to stating the intended
+polymorphic design outright. It also separately noted the given `bool |
+None` interface itself is a significant scaffold (it pre-supplies the
+"defer" concept), but judged that appropriate for this difficulty/duration
+rather than a defect, so no change was made there. **Fix applied:** the
+first passage was reworded to state only the behavioral requirement
+(`PercentageRolloutRule` must *agree* with `PercentageRolloutFlag` for the
+same inputs — testable, doesn't prescribe the implementation approach);
+the closing prompt was reworded to ask the candidate to explain their
+design and how they'd expect it to behave with a future rule type, without
+presupposing the answer is "zero changes." Public test pass/fail split
+re-verified unchanged (all 10 fail with `NotImplementedError`) — README-only
+change, no code touched.
+
+It confirmed it never accessed anything outside `candidate/`. (Its
+implementation and added test edits were reverted after the simulation,
+then the README fix was applied and re-validated, restoring the original
+unimplemented starting state.)

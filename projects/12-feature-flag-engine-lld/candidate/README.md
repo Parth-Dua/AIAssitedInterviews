@@ -108,9 +108,9 @@ class PercentageRolloutRule(FlagRule):
 `None` (it defers — it never has an opinion that isn't "deny"). `AllowListRule`
 is the mirror image: `True` if the user is in its set, else `None` — it
 never returns `False`. `PercentageRolloutRule` always has an opinion (it
-never returns `None`) and should reuse the same bucketing logic you already
-built for `PercentageRolloutFlag` in Part 1, rather than re-deriving it —
-think about how to share that logic between the two without duplicating it.
+never returns `None`), and for a given `flag_name`/`rollout_percentage`
+must agree with `PercentageRolloutFlag` on the same `user_id` — the two
+are evaluating the same rollout, just through different interfaces.
 
 ### `RuleChain` (`flagengine/rule_chain.py`)
 
@@ -129,11 +129,10 @@ returns `default`.
 
 Run `pytest -q tests/test_rules_and_chain.py` until it's green.
 
-When you're done, think about whether finishing Part 2 required you to go
-back and change anything in `percentage_rollout.py`, and whether
-`RuleChain` would still work correctly if you added a brand-new kind of
-rule tomorrow, without changing a single line of `RuleChain` itself. You
-should be able to explain why.
+When you're done, be ready to explain your `RuleChain` design: whether
+finishing Part 2 required changing anything in `percentage_rollout.py`,
+and how you'd expect it to behave if the platform team added a new kind of
+rule later.
 
 ## Repository layout
 

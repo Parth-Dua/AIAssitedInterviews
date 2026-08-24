@@ -22,7 +22,7 @@ REVISE → FINALIZE.
 | 9 | payment-webhook-handler | done | done | done (1 fail/8 pass) | done (13/13 pass; order-status-gate fails 3-4) | done (no leakage) | done (solved correctly; found+fixed a docstring that gave away the diagnosis) | done | done |
 | 10 | async-job-worker-pool | done | done | done (1 fail/5 pass, deterministic across 3+ runs) | done (9/9 pass; per-call-lock fails 3-4) | done (no leakage) | done (solved correctly, ~30-60min, fully deterministic, no leakage) | done | done |
 | 11 | rate-limiter-lld | done | done | done (10/10 fail as expected, NotImplementedError) | done (19/19 pass; isinstance-branching fails 3) | done (no leakage) | done (solved correctly, polymorphic design, no rewrite needed; found+fixed over-explicit README hint) | done | done |
-| 12 | feature-flag-engine-lld | pending | | | | | | | |
+| 12 | feature-flag-engine-lld | done | done | done (10/10 fail as expected) | done (18/18 pass; isinstance-branching fails 4, hardcoded-order fails 1) | done (no leakage) | done (solved correctly, polymorphic; found+fixed 2 over-explicit README hints) | done | done |
 | 13 | llm-request-router | pending | | | | | | | |
 | 14 | interview-scheduling-hld | pending | | | | | | | |
 | 15 | job-processing-platform-final | pending | | | | | | | |
