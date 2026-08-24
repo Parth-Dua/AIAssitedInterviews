@@ -80,3 +80,47 @@ themselves, including deciding whether "the test passes now" actually means
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34 (and this project's own build brief, which required the same
+standard for the new Node track): an isolated agent received only
+`candidate/README.md`, `candidate/.ai/assessment-skill/SKILL.md`, and repo
+access — no bug design, hidden tests, reference solution, or evaluator
+notes. Result: it correctly diagnosed the hardcoded `status: existing.status`
+root cause and fixed it, in an estimated 15-25 minutes — comfortably inside
+the 45-60 minute timebox. It deliberately did NOT add status-enum
+validation, reasoning (correctly, per the README's own scope-discipline
+wording) that doing so unprompted would be scope creep beyond the reported
+bug — and explicitly flagged the gap as a discussion point rather than
+silently leaving it. This is a legitimate candidate judgment call, not a
+defect in the exercise: `scoring_rubric.md` and `DEBRIEF.md` already treat
+"did the candidate proactively raise the validation gap, even if their PR
+doesn't close it" as a real (if partial) signal, so this outcome was
+already anticipated.
+
+**Findings that caused revisions (both applied and re-verified, README-only
+and SKILL.md-only, no code touched):**
+1. `.ai/assessment-skill/SKILL.md`, which is otherwise Project 1's exact
+   text reused across the whole suite, still carried two references to
+   "Python, FastAPI, Pydantic" from that Python-track origin — inert here
+   (not a leak, since they don't reference the bug) but a confusing
+   copy-paste artifact in a Node/TypeScript project, and worth fixing before
+   this became the copy-template for Projects 17-20. **Fix applied:**
+   genericized both to stack-neutral wording ("the language, framework, or
+   library syntax... used in this repository"; "a partial-update check,"
+   dropping "in Pydantic"). This restores the property that the SKILL.md
+   body is truly byte-for-byte reusable across both the Python and Node
+   tracks, not just within one track.
+2. The README claimed "One test currently fails" but two fail (one
+   unit-level, one HTTP-level, both encoding the same bug). **Fix applied:**
+   corrected to "Two tests currently fail (one unit-level, one HTTP-level)
+   — both encode the same reported bug."
+
+Public test pass/fail split re-verified unchanged (2 failed / 10 passed)
+after both edits — neither touched candidate code.
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits to
+`candidate/` were reverted after the simulation, then the README/SKILL.md
+fixes were applied and re-validated, restoring the original buggy starting
+state.)

@@ -63,8 +63,9 @@ npm install
 npm test
 ```
 
-One test currently fails — it encodes the reported bug. The rest pass and
-describe behavior you must **not** break.
+Two tests currently fail (one unit-level, one HTTP-level) — both encode the
+same reported bug. The rest pass and describe behavior you must **not**
+break.
 
 ## Constraints
 
