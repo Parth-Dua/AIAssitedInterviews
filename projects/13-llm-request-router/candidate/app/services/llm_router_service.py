@@ -6,9 +6,7 @@ DEFAULT_MAX_RETRIES = 3
 
 
 class NoValidCompletionError(Exception):
-    """Raised when neither the primary nor the fallback model could produce
-    a usable (non-blank) completion for a prompt.
-    """
+    """Raised when no usable completion could be produced for a prompt."""
 
     def __init__(self, prompt: str):
         self.prompt = prompt
@@ -21,11 +19,6 @@ class LLMRouterService:
     primary can't serve the request. A response cache sits in front of
     both models so repeated identical prompts don't re-invoke a model
     client unnecessarily.
-
-    Only completions produced by the primary model should ever be cached.
-    A response served by the fallback model represents a temporary
-    degradation (the primary being down) and must never be cached — it
-    should never keep being served once the primary is healthy again.
     """
 
     def __init__(

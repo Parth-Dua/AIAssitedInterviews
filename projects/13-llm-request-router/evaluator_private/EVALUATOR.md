@@ -110,3 +110,38 @@ paths) and verify them itself. See `ai_skill_audit.md`.
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug design,
+hidden tests, reference solution, or evaluator notes. Result: it correctly
+diagnosed the cache-write-policy bug, avoided the no-caching overcorrection
+(explicitly verified the happy-path caching test still passed throughout),
+and correctly implemented blank-response validation for both the primary
+retry loop and the fallback path, in an estimated 45-70 minutes — inside
+the 75-90 minute timebox.
+
+**Finding that caused a revision:** it flagged that `LLMRouterService`'s
+class docstring restated the README's caching policy almost verbatim
+("Only completions produced by the primary model should ever be cached...
+must never be cached") directly above the two `cache.set` call sites,
+making the mismatch visible without tracing the actual bug mechanism; it
+separately flagged that `NoValidCompletionError`'s docstring ("Raised when
+neither the primary nor the fallback model could produce a usable
+(non-blank) completion") pre-narrated the exact trigger condition for the
+missing feature, short-circuiting the design step. Both statements were
+legitimate as *README* content (that's where business rules belong, per
+this curriculum's established pattern) but became spoilers once duplicated
+in code comments sitting next to the relevant logic. **Fix applied:**
+trimmed the class docstring to describe only the class's mechanical role
+(routes, retries, falls back, cache sits in front) with the caching policy
+removed since the README already states it; trimmed the exception's
+docstring to a minimal description with the specific dual-failure trigger
+condition removed. Public test pass/fail split re-verified unchanged (2
+failed / 6 passed) after the edit.
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits
+to `candidate/` were reverted after the simulation, then the docstring
+fixes were applied and re-validated, restoring the original buggy/
+incomplete starting state.)
