@@ -7,10 +7,8 @@ class CouponRepository:
     """In-memory store of coupons, keyed by code.
 
     `save` and `get_by_code` both hand back defensive copies rather than the
-    live stored instance (or a caller's own instance). That way, mutating a
-    `Coupon` object a caller happens to be holding can never silently change
-    what's persisted, and vice versa — the stored record only ever changes
-    via an explicit `save()` call.
+    live stored instance, so callers never hold a reference to
+    repository-owned state.
     """
 
     def __init__(self):

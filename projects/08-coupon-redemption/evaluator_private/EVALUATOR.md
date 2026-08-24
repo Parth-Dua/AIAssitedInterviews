@@ -85,3 +85,35 @@ See `ai_skill_audit.md`.
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug design,
+hidden tests, reference solution, or evaluator notes. Result: it correctly
+diagnosed the mutate-after-defensive-copy-save root cause, explicitly
+recognized the bug is invisible in the redeem response and only shows via a
+fresh read, and correctly implemented the clamped fixed-amount discount
+without disturbing percentage behavior — all in an estimated 35-50 minutes,
+inside the 60-75 minute timebox.
+
+**Finding that caused a revision:** it flagged `CouponRepository`'s
+docstring as "very close to a direct hint" — the original wording ("mutating
+a `Coupon` object a caller happens to be holding can never silently change
+what's persisted, and vice versa — the stored record only ever changes via
+an explicit `save()` call") explains the defensive-copy design in terms
+close enough to the bug's exact mechanism (mutate-after-save doesn't
+persist) that it meaningfully shortens the investigation. **Fix applied:**
+trimmed the docstring to state only the legitimate, necessary fact (copies
+are returned, not live references) without narrating the save-ordering
+consequence. Public test pass/fail split re-verified unchanged (6 failed /
+8 passed) after the edit. Test docstrings describing expected behavior
+(e.g. "a fresh repository read must show the coupon as exhausted") were
+left as-is — the solver noted these as fair since they state requirements,
+not the fix mechanism, consistent with how prior projects' test docstrings
+have been judged.
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits to
+`candidate/` were reverted after the simulation, then the docstring fix was
+applied and re-validated, restoring the original buggy/incomplete starting
+state.)
