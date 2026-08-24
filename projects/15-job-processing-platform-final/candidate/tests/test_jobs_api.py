@@ -64,3 +64,27 @@ def test_cancel_queued_job_is_accepted():
 
     assert response.status_code == 200
     assert response.json()["status"] == "cancelled"
+
+
+def test_cancel_running_job_is_rejected_via_api():
+    job = _create_job({"rows": [1]})
+    client.post(f"/jobs/{job['id']}/start")
+
+    response = client.post(f"/jobs/{job['id']}/cancel")
+
+    assert response.status_code == 409
+    assert client.get(f"/jobs/{job['id']}").json()["status"] == "running"
+
+
+def test_duplicate_finish_via_api_is_rejected():
+    job = _create_job({"rows": [1]})
+    client.post(f"/jobs/{job['id']}/start")
+    client.post(f"/jobs/{job['id']}/finish", json={"result": "export-first.csv"})
+
+    response = client.post(
+        f"/jobs/{job['id']}/finish", json={"result": "export-second.csv"}
+    )
+
+    assert response.status_code == 409
+    fetched = client.get(f"/jobs/{job['id']}")
+    assert fetched.json()["result"] == "export-first.csv"

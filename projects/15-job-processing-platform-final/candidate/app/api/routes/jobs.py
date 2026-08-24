@@ -52,6 +52,18 @@ def finish_job(job_id: str, request: JobFinishRequest) -> JobOut:
     return _to_out(job)
 
 
+@router.post("/{job_id}/cancel", response_model=JobOut)
+def cancel_job(job_id: str) -> JobOut:
+    """Cancels a job that is still waiting in the queue."""
+    try:
+        job = _service.cancel_job(job_id)
+    except JobNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except InvalidJobStateError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    return _to_out(job)
+
+
 @router.get("/{job_id}", response_model=JobOut)
 def get_job(job_id: str) -> JobOut:
     """Returns the current state of a job."""

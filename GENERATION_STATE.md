@@ -25,7 +25,7 @@ REVISE → FINALIZE.
 | 12 | feature-flag-engine-lld | done | done | done (10/10 fail as expected) | done (18/18 pass; isinstance-branching fails 4, hardcoded-order fails 1) | done (no leakage) | done (solved correctly, polymorphic; found+fixed 2 over-explicit README hints) | done | done |
 | 13 | llm-request-router | done | done | done (2 fail/6 pass) | done (12/12 pass; no-caching overcorrection fails 2) | done (no leakage) | done (solved correctly; found+fixed two docstring spoilers) | done | done |
 | 14 | interview-scheduling-hld | done | done | n/a (design deliverable; bonus algo 4/4 fail as expected) | done (bonus 12/12 pass incl. hidden) | done (no leakage) | done (strong design produced, ~45-60min, no leakage, no over-engineering) | done | done |
-| 15 | job-processing-platform-final | pending | | | | | | | |
+| 15 | job-processing-platform-final | done | done | done (2 fail/9 pass) | done (20/20 pass; unconditional-cancel fails 8) | done (no leakage found; mechanical docstrings from the start) | in progress | pending | done |
 
 ## Notes / decisions
 
