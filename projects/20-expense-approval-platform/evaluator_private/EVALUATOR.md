@@ -123,6 +123,45 @@ bug-finding side as well. See `ai_skill_audit.md`.
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
 
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug design,
+hidden tests, reference solution, or evaluator notes. Result: it correctly
+diagnosed the unused-`actingUserId` root cause, fixed BOTH `approveReport`
+and `rejectReport` (noticing the public suite had unit-level coverage for
+reject's cross-manager case but no API-level test, and adding one), and
+avoided the delegation-wiring trap entirely — it explicitly recognized that
+the given public tests only checked `delegatedApproverId` gets SET, never
+that a delegate can actually act, and wrote its own regression tests
+proving the delegate can approve/reject, the original manager retains
+authority after delegating, and an unrelated manager stays blocked. It
+centralized the fix into one shared `assertCanActOnReport` helper consulted
+by both approve and reject — the same generalization shape the reference
+solution uses. Estimated time: 45-70 minutes, inside the 60-90 minute
+timebox, with the delegation-wiring trap correctly identified as "the main
+thing that would eat a weaker candidate's remaining time or go unnoticed
+entirely" — exactly the intended difficulty source for this capstone.
+
+No revision was needed. It noted the data model (`delegatedApproverId`
+already declared on `ExpenseReport`, already threaded through the seed
+helper) as "mildly generous scaffolding" that removes a schema-design step,
+but judged this appropriate rather than a leak, since the README frames
+this as a bounded feature addition, not an open-ended design exercise —
+consistent with how equivalent scaffolding-vs-leak judgment calls were
+resolved on Projects 10 and 14. No candidate-facing change was warranted.
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits
+to `candidate/` were reverted after the simulation, restoring the original
+buggy/incomplete starting state, re-verified at 4 failed / 15 passed.)
+
+This completes the original 20-project suite build (Python Projects 1-15,
+Node Projects 16-20): all 12 Python-track solver simulations (Projects
+4-15) and all 5 Node-track solver simulations (Projects 16-20) are now
+complete and recorded. Projects 21-22 (a subsequently added black-box
+full-app debugging tier) are validated separately in their own
+`evaluator_private/EVALUATOR.md` files.
+
 ## Validation performed during authoring
 
 - Ran `npm test` on the buggy/incomplete candidate starting code:
