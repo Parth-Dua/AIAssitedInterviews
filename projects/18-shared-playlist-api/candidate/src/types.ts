@@ -4,12 +4,7 @@ export interface PlaylistSong {
   artist: string;
   /** Epoch ms at the time the song was added. Not used for ordering — see `sequence`. */
   addedAt: number;
-  /**
-   * Monotonically increasing integer assigned to a song when it's added to a
-   * given playlist. Used as the stable cursor for pagination instead of
-   * wall-clock time or array position, so paging is deterministic and
-   * unaffected by later removals.
-   */
+  /** Monotonically increasing integer assigned when a song is added to a given playlist. */
   sequence: number;
 }
 

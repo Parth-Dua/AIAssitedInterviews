@@ -105,6 +105,43 @@ the candidate's diff, tests, and explanation only.
 
 ## Fresh solver simulation (validation record)
 
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug design,
+hidden tests, reference solution, or evaluator notes. Result: it correctly
+diagnosed the reference-equality root cause and implemented cursor-based
+(not offset-based) pagination correctly, in an estimated 35-50 minutes —
+inside the 60-75 minute timebox.
+
+**Finding that caused a revision:** it explicitly flagged that it did NOT
+have to independently reason through cursor-vs-offset pagination — the
+`sequence` field's docstring in `types.ts` ("Used as the stable cursor for
+pagination instead of wall-clock time or array position, so paging is
+deterministic and unaffected by later removals") and a matching line in
+`playlistRepository.ts`'s class docstring ("which would break cursor-based
+pagination") stated the intended design decision outright. This is exactly
+the judgment the README asks the candidate to demonstrate ("why you chose
+[cursor-based pagination] and why"), so pre-supplying the answer in code
+comments undercut the exercise's own stated goal. **Fix applied:** trimmed
+both docstrings to their mechanical facts only (`sequence` is "a
+monotonically increasing integer assigned when a song is added"; the
+repository's counter "survives removals: deleting a song must never cause
+a future song to be assigned a `sequence` value that was already used") —
+both true, necessary implementation facts a candidate needs to use the
+field correctly, with the pagination-design justification removed. The
+README's explicit naming of "cursor-based pagination" as the REQUIRED
+feature (not left ambiguous) was confirmed to be intentional and fine —
+that's the task specification, not a spoiler; what was cut was the
+supporting REASONING for that choice, which is the candidate's job to
+supply. Public test pass/fail split re-verified unchanged (6 failed / 10
+passed) — comment-only changes, no logic touched.
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits
+to `candidate/` were reverted after the simulation, then the docstring
+fixes were applied and re-validated, restoring the original buggy/
+incomplete starting state.)
+
+## Fresh solver simulation (validation record)
+
 An isolated run applied `evaluator_private/reference_solution/
 playlistService.ts` plus `evaluator_private/hidden_tests/
 playlistHidden.test.ts` on top of the untouched `candidate/` starting

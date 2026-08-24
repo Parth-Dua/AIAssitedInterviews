@@ -8,7 +8,7 @@ import { Playlist, PlaylistSong } from '../types';
  * Also tracks a per-playlist sequence counter, kept separately from the
  * `songs` array itself so that it survives removals: deleting a song must
  * never cause a future song to be assigned a `sequence` value that was
- * already used (which would break cursor-based pagination).
+ * already used.
  */
 export class PlaylistRepository {
   private readonly playlistsById: Map<string, Playlist> = new Map();
