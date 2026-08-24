@@ -105,18 +105,15 @@ class TieredRateLimiter(RateLimiter):
 ```
 
 Dispatches each `key` to `overrides[key]` if one is configured for that key,
-otherwise to `default`. It must work with **any** `RateLimiter`
+otherwise to `default`. It must work correctly with **any** `RateLimiter`
 implementation passed in for `default` or in `overrides` — including ones
-that don't exist yet. Don't write `TieredRateLimiter` in a way that assumes
-its collaborators are specifically `TokenBucketRateLimiter` or
-`FixedWindowRateLimiter`; it should only ever call the `RateLimiter`
-interface it's given.
+that don't exist yet.
 
 Run `pytest -q tests/test_fixed_window_and_tiered.py` until it's green.
 
-When you're done, think about whether finishing Part 2 required you to go
-back and change anything in `token_bucket.py`. You should be able to explain
-why it did or didn't.
+When you're done, be ready to explain the design decisions behind
+`TieredRateLimiter` and whether finishing Part 2 required changing anything
+in `token_bucket.py`.
 
 ## Repository layout
 

@@ -95,3 +95,38 @@ still has to make and defend the actual design decisions. See
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's implementation, added tests, and design explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no design
+brief, hidden tests, reference solution, or evaluator notes. Result: it
+implemented all three classes correctly (all public tests passed), produced
+a genuinely polymorphic `TieredRateLimiter` with zero `isinstance` checks,
+and confirmed Part 1 required no changes to support Part 2, in an
+estimated 45-70 minutes — inside the 60-90 minute timebox.
+
+**Finding that caused a revision:** it rated the README's Part 2 section as
+"borderline revealing" — the original wording included an explicit
+instruction, "Don't write `TieredRateLimiter` in a way that assumes its
+collaborators are specifically `TokenBucketRateLimiter` or
+`FixedWindowRateLimiter`; it should only ever call the `RateLimiter`
+interface it's given," which states the intended design principle
+(polymorphism over type-checking) almost outright, short-circuiting the
+discovery this project is meant to test. It also flagged the closing
+prompt ("think about whether finishing Part 2 required you to go back and
+change anything... You should be able to explain why it did or didn't") as
+mildly priming the expected answer. **Fix applied:** trimmed the
+`TieredRateLimiter` section to state only the behavioral requirement ("must
+work correctly with any `RateLimiter` implementation... including ones
+that don't exist yet") without the how-to-implement-it instruction, and
+reworded the closing reflection prompt to ask the candidate to be ready to
+explain their design without presupposing which answer is correct. Public
+test pass/fail split re-verified unchanged (all 10 fail with
+`NotImplementedError`) after the edit — this was a README-only change, no
+code touched.
+
+It confirmed it never accessed anything outside `candidate/`. (Its
+implementation and added test file were reverted after the simulation,
+then the README fix was applied and re-validated, restoring the original
+unimplemented starting state.)

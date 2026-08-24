@@ -1,0 +1,19 @@
+assessment:
+  title: "Feature Flag Rule Engine — Low-Level Design"
+  type: lld
+  time_limit_minutes: 90
+
+ai:
+  mode: guarded
+  instructions: "candidate/.ai/assessment-skill/SKILL.md"
+
+candidate_access:
+  - "candidate/flagengine/**"
+  - "candidate/api/**"
+  - "candidate/tests/**"
+  - "candidate/README.md"
+  - "candidate/pyproject.toml"
+  - "candidate/.ai/**"
+
+blocked_access:
+  - "evaluator_private/**"
