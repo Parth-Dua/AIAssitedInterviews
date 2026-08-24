@@ -15,6 +15,12 @@ a project — it contains the root cause, reference solution, and hidden tests.
 
 1. `cd projects/NN-slug/candidate`
 2. Read `README.md` — treat it exactly like a real interview/OA prompt.
+
+**Environment note:** if `pip install -e ".[dev]"` reports everything satisfied but
+plain `pytest` then fails with `ModuleNotFoundError`, your `pytest` executable is
+probably resolving to a different Python environment than the one the dependencies were
+installed into. Use `python3 -m pytest -q` instead — it runs pytest via the same
+interpreter `pip3`/`pip install` targeted.
 3. If you want AI assistance, load `.ai/assessment-skill/SKILL.md` into whatever coding
    assistant you use (Claude, Cursor, Copilot, Codex, Gemini, etc.) as a system/project
    instruction. It constrains the assistant to interview-appropriate help.

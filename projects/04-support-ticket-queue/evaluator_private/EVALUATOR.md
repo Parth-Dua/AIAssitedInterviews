@@ -83,3 +83,22 @@ reproduction, hypothesis confirmation, and verification themselves. See
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug design,
+hidden tests, reference solution, or evaluator notes. Result: it correctly
+diagnosed the mutable-default-argument root cause (including the caller-list-
+mutation subtlety) and implemented a fully correct fix (all public + its own
+added regression tests passed) in an estimated 15-25 minutes of investigation
+— comfortably inside the 45-60 minute timebox. It confirmed the README/SKILL
+did not hint at the answer and that the failing-test evidence was sufficient
+to diagnose without guessing. It confirmed it never accessed anything outside
+`candidate/`. One incidental finding: in its sandbox, plain `pytest` resolved
+to a different Python environment than the installed deps, requiring
+`python3 -m pytest`; this is a generic environment quirk (now noted in the
+root `CURRICULUM.md`), not a flaw in this exercise. No revisions to the
+exercise were needed as a result of this simulation. (Its edits to
+`candidate/` were reverted after the simulation to restore the original
+buggy starting state.)
