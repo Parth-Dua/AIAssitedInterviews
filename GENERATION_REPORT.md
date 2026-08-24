@@ -1,7 +1,12 @@
 # Generation Report
 
 ## Total projects
-15 of 15 built and validated.
+20 of 20 built and validated: the original 15-project Python/FastAPI suite (Projects
+1-15), plus a 5-project Node.js/TypeScript/Express track (Projects 16-20) added by a
+subsequent user request, calibrated to Amazon-style repo-based debugging OAs. (A
+further black-box full-app debugging tier, Projects 21-22, was requested after this
+report was first finalized and is tracked in `GENERATION_STATE.md`; this report is
+updated again once that tier completes.)
 
 ## Validation status
 Every project passed the full autonomous quality loop (design → implement correct
@@ -27,6 +32,18 @@ For the HLD project (14): the main design deliverable has no pytest suite by des
 fresh-solver design-quality review; its small optional bonus algorithm followed the
 same stub/reference/hidden-test validation as the LLD projects.
 
+For the Node/Express track (16-20): the same validation loop as Projects 1-10/13/15
+applied one-for-one, on a `npm install && npm test` toolchain (Jest + ts-jest +
+Supertest) instead of pytest. Every buggy/incomplete candidate state was verified to
+produce the intended pass/fail split on a *fresh* `npm install` (not just the builder
+agent's own install), confirming the pinned-TypeScript toolchain is reproducible; every
+reference solution passed 100% of public + hidden tests; every tempting-but-incomplete
+fix was verified to fail its targeted hidden test(s) while passing the public suite (or,
+for Project 16, also failing nothing new at the public level, and for Project 18/20,
+also passing some public tests it shouldn't have fully "solved" — documented per
+project). Project 17's async-hang reproduction was independently re-run 3 times fresh
+to confirm determinism (no real timers, no flakiness).
+
 See `GENERATION_STATE.md` for the per-project validation matrix and
 `MASTER_EVALUATOR.md` for the full private curriculum review (concept coverage,
 duplicate-skill analysis, solver-simulation findings, realism audit).
@@ -35,60 +52,80 @@ duplicate-skill analysis, solver-simulation findings, realism audit).
 
 | Category | Projects | Count |
 |---|---|---|
-| Debugging-heavy (primary) | 1, 2, 3, 4, 9, 10, 15 | 7 |
-| Debugging + feature implementation | 5, 6, 7, 8, 13 | 5 |
+| Debugging-heavy (primary) | 1, 2, 3, 4, 9, 10, 15, 16, 17, 19 | 10 |
+| Debugging + feature implementation | 5, 6, 7, 8, 13, 18, 20 | 7 |
 | Low-level design | 11, 12 | 2 |
 | AI-engineering backend | 13 | 1 (also counted above as implementation) |
 | High-level design | 14 | 1 |
 
 Debugging is the dominant category throughout the suite, consistent with master
-spec §2/§4's requirement (8 primarily-debugging projects: 1,2,3,4,9,10,15 plus 15's
-counting rule that the integrated final counts as debugging-heavy even though it
-includes a feature).
+spec §2/§4's requirement, and remains dominant after the Node track's addition
+(10 primarily-debugging projects across both stacks, plus 15 and 20 each counting as
+debugging-heavy final/capstone projects despite including a feature).
 
 ## Interview-format coverage
-AI-Assisted Debugging Assessment (A): 1, 2, 3, 4, 9, 10.
-Debugging + Feature Implementation (B): 5, 6, 7, 8, 13, 15.
-Existing-code implementation task (C): feature portions of 5, 6, 7, 8, 13.
+AI-Assisted Debugging Assessment (A): 1, 2, 3, 4, 9, 10, 16, 17, 19.
+Debugging + Feature Implementation (B): 5, 6, 7, 8, 13, 15, 18, 20.
+Existing-code implementation task (C): feature portions of 5, 6, 7, 8, 13, 18, 20.
 Low-Level Design (D): 11, 12.
 High-Level Design (E): 14.
-All five formats from the master spec are represented.
+All five formats from the master spec are represented in both the Python and Node
+tracks (except LLD/HLD, deliberately Python-only per the original spec's "use
+sparingly" guidance for HLD and the Node track's focus on repo-debugging OA
+calibration rather than design rounds).
 
 ## Difficulty distribution
-1-4: 5-6/10 (45-60m). 5-8: 6-7/10 (60-75m). 9-10: 8/10 (60-90m). 11-12: 7-8/10
-(60-90m). 13: 8/10 (75-90m). 14: 6/10-equivalent HLD depth (45-60m). 15: 9/10
-(75-90m). Monotonic increase through the debugging track; LLD/AI-eng/HLD
-interleaved at difficulty comparable to their neighbors.
+Python track: 1-4: 5-6/10 (45-60m). 5-8: 6-7/10 (60-75m). 9-10: 8/10 (60-90m). 11-12:
+7-8/10 (60-90m). 13: 8/10 (75-90m). 14: 6/10-equivalent HLD depth (45-60m). 15: 9/10
+(75-90m). Monotonic increase through the debugging track; LLD/AI-eng/HLD interleaved
+at difficulty comparable to their neighbors.
+Node track (independent progression, not a continuation of the Python numbering —
+16 is comparable to Python's fundamentals tier): 16: 6/10 (45-60m). 17: 7/10 (45-60m).
+18: 7/10 (60-75m). 19: 8/10 (60-75m). 20: 8.5/10 (60-90m).
 
 ## Solver simulations performed
-12 of 12 required (rule 34, projects 4-15) — see `MASTER_EVALUATOR.md` §5 for the
-full table. Every simulation correctly solved its project from candidate repo +
-README + SKILL.md alone, with no access to evaluator_private/. Six surfaced a
-leakage or difficulty-calibration finding; each was fixed and re-validated before
-the project was finalized. The final one (Project 15, the capstone) solved cleanly
-with no leakage found and independently generalized its fix beyond what the
-reference solution required.
+17 of 17 required (rule 34, Python projects 4-15 + all of Node projects 16-20) — see
+`MASTER_EVALUATOR.md` §5 for the full table. Every simulation correctly solved its
+project from candidate repo + README + SKILL.md alone, with no access to
+evaluator_private/. Nine surfaced a leakage or difficulty-calibration finding (six in
+the Python track, three in the Node track); each was fixed and re-validated before
+the project was finalized. Project 15 (Python capstone) and Project 20 (Node capstone)
+both solved cleanly with no leakage found, and both independently generalized their
+fix beyond the minimum the reported bug required.
 
 ## AI-skill audits performed
-15 of 15 (one per project) — leakage audit + simulated-prompt table + agent
+20 of 20 (one per project) — leakage audit + simulated-prompt table + agent
 portability audit, in every `evaluator_private/ai_skill_audit.md`.
 
 ## Agent-independence audit status
-Complete for all 15 projects. Every `SKILL.md` is written as vendor-neutral
+Complete for all 20 projects. Every `SKILL.md` is written as vendor-neutral
 behavioral policy (no tool names, no permission-system assumptions, no
 vendor-specific mechanics) and is Project 1's text verbatim except each project's
-final scope paragraph. Every `assessment.yaml` (added mid-generation per an explicit
-user request, retrofitted onto Projects 1-3 and present from the start in 4-15)
-separates policy (SKILL.md) from enforcement (candidate_access/blocked_access),
-confirmed workable with any capable coding agent, not a specific product.
+final scope paragraph — including across the stack boundary: Project 16's solver
+simulation caught leftover Python/FastAPI/Pydantic wording in the two spots where the
+shared template's body text (not just the per-project scope paragraph) mentioned
+stack-specific examples; those were genericized so the SAME base SKILL.md text is now
+byte-for-byte reusable across both the Python and Node tracks, not just within one.
+Every `assessment.yaml` (added mid-generation per an explicit user request,
+retrofitted onto Projects 1-3 and present from the start in 4-20) separates policy
+(SKILL.md) from enforcement (candidate_access/blocked_access), confirmed workable
+with any capable coding agent, not a specific product.
 
-## Mid-generation update applied
-A user-requested update introduced `assessment.yaml` as a standardized,
-vendor-neutral assessment-environment manifest per project, and an added
-"Agent portability audit" section in every `ai_skill_audit.md`. This was retrofitted
-onto the already-completed Project 1 and applied to every subsequent project from
-the start. See `GENERATION_STATE.md`'s "Notes / decisions" section and
-`CURRICULUM.md`'s "Assessment format" section for details.
+## Mid-generation updates applied
+1. A user-requested update introduced `assessment.yaml` as a standardized,
+   vendor-neutral assessment-environment manifest per project, and an added
+   "Agent portability audit" section in every `ai_skill_audit.md`. This was
+   retrofitted onto the already-completed Project 1 and applied to every
+   subsequent project from the start.
+2. A second user-requested update extended the suite with a 5-project Node.js/
+   TypeScript/Express track (Projects 16-20), preserving every established
+   convention (candidate/evaluator_private split, SKILL.md, assessment.yaml, the
+   validation loop) on a new stack, purpose-built for Amazon-style repo-debugging
+   OA practice. Nothing in Projects 1-15 was modified to accommodate this beyond
+   adding `node_modules/`/`dist/` to the repo `.gitignore`.
+
+See `GENERATION_STATE.md`'s "Notes / decisions" section and `CURRICULUM.md`'s
+"Assessment format" / "Node/Express track" sections for details.
 
 ## Known limitations
 
@@ -115,11 +152,18 @@ the start. See `GENERATION_STATE.md`'s "Notes / decisions" section and
   15 projects (see `MASTER_EVALUATOR.md` §8 for the full account). No other project
   was affected.
 
-## Exact command to begin Project 1
+## Exact command to begin Project 1 (Python track) or Project 16 (Node track)
 
-```
+```bash
+# Python track
 cd projects/01-orderflow-pricing/candidate
 cat README.md
 pip install -e ".[dev]"
 python3 -m pytest -q
+
+# Node track
+cd projects/16-team-task-board/candidate
+cat README.md
+npm install
+npm test
 ```

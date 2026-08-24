@@ -1,7 +1,13 @@
 # Master Evaluator — Private Curriculum Review
 
 Generator-facing. Not part of any candidate-facing content. This is the section-43
-"private master evaluator" review of the full 15-project suite.
+"private master evaluator" review of the full curriculum: originally a 15-project
+Python/FastAPI suite (§1-8 below), extended by user request with a 5-project
+Node.js/TypeScript/Express track calibrated to Amazon-style repo-debugging OAs
+(§9-10), and further extended with a 2-project black-box full-app debugging tier
+(tracked separately once complete — see `GENERATION_STATE.md`). Sections 1-8 describe
+the original 15-project suite and are left as originally written except where noted;
+sections 9+ cover what changed and was added.
 
 ## 1. Concept coverage
 
@@ -222,3 +228,97 @@ agent's instructions, with no code in this repo assuming a specific vendor.
   reviewers should not expect a THIRD distinct trap shape if this curriculum is ever
   extended with a third LLD project; a new one would need a genuinely different
   extensibility mechanism to avoid real repetition.
+
+## 9. Node/Express track (Projects 16-20) — coverage and calibration
+
+Added by explicit user request as a purpose-built Amazon-style repo-based debugging OA
+practice track, NOT generic Node.js instruction. Structural conventions from §1-8 carry
+over unchanged (candidate/evaluator_private split, SKILL.md as vendor-neutral policy,
+assessment.yaml as vendor-neutral enforcement, the same validation loop, fresh solver
+simulation for every project).
+
+**Node/Express skill coverage:** Express routing (16-20), middleware ordering and
+error-handling middleware (17, 20), async/await and Promise-rejection propagation (17),
+validation (16, 20), request context/`req.user` (20), authorization at the resource
+level vs. the role level (20), service-layer logic (16-20), in-memory persistence and
+query/uniqueness logic (16, 18), pagination — cursor vs. offset (18), caching and
+composite-key construction (19), external-client abstraction with a fake/deterministic
+client (19), API contract preservation (16, 17, 20), testing with Jest/ts-jest/Supertest
+(16-20), mocking/fakes (17, 19), regression tests (16-20). Deliberately NOT covered:
+obscure Express internals, JS coercion trivia, event-loop trivia, advanced TypeScript
+generics, library-specific hacks — per the master brief's explicit "do not test
+framework trivia" constraint (§6 of that brief).
+
+**Amazon-style OA coverage:** all 5 projects are unfamiliar-repository, bounded-codebase,
+terminal-testable exercises with a candidate-facing bug report, existing tests,
+multi-file reasoning, a strict timebox, guarded AI assistance, and hidden evaluator
+tests — the exact shape described in the brief's §2 calibration requirements. Project 17
+specifically targets the single most common real Express interview/code-review
+topic (async handlers and unhandled promise rejection). Project 20 specifically targets
+coarse-role-vs-resource-level authorization, one of the most common real backend
+vulnerability classes and interview topics.
+
+**Difficulty progression (independent of the Python track's numbering):** 16 (6/10) →
+17 (7/10) → 18 (7/10) → 19 (8/10) → 20 (8.5/10), mirroring the shape of the Python
+1→15 progression at a compressed scale — fundamentals, then harder debugging, then
+advanced, then a generalizing capstone — as explicitly requested.
+
+**Comparison with the Python track / cross-language skill overlap:** the two tracks
+deliberately share *skill categories* (debugging process, root-cause reasoning,
+multi-file reasoning, tempting-but-incomplete fixes, hidden-test-carried signal) while
+using *different concrete bug mechanisms* in every case, so neither track is a port of
+the other:
+
+| Python project | Node project | Shared skill category | Why the mechanism differs |
+|---|---|---|---|
+| 3 (`exclude_unset`/`exclude_none`) | 16 (merge-order hardcode) | Partial-update (PATCH) semantics | Python: a library-serialization gotcha. Node: a leftover hardcoded business-rule override — no library-specific knowledge needed either way. |
+| 6, 13 (cache invalidation-on-write; cache-by-provenance) | 19 (cache key missing a dimension) | Cache correctness | All three are structurally distinct cache-bug angles (see §4's mechanism table); 19 adds a NEW angle (key-construction completeness) not covered by 6 or 13. |
+| 5 (cursor boundary off-by-one) | 18 (offset-vs-cursor architecture choice) | Pagination | Python 5's bug is a boundary-comparison logic error in an EXISTING cursor design; Node 18's bug is choosing the WRONG pagination architecture (index-based) from scratch — a design decision, not a boundary slip. |
+| 7 (unscoped repository query) | 20 (missing resource-level check atop a correct role gate) | Authorization scoping | Python 7's bug is "used the wrong lookup method, the right one existed unused nearby." Node 20's bug is "no per-resource check exists at all — the middleware's role check is correct but insufficient by construction," a different, complementary lesson about layering coarse and fine-grained authorization. |
+| 15 (boolean-logic guard covers one of several invalid states) | 20 (missing check entirely, generalization tested via delegation) | "Does the fix generalize beyond the one reported case" (both capstones) | Python 15 tests whether a candidate notices a LOGIC ERROR generalizes across sibling methods (start/finish/cancel all need the same guard). Node 20 tests whether a candidate's fix generalizes across a NEW FEATURE (delegation) that the fix must recognize, not just across sibling methods. |
+
+No Python project and no Node project share both domain AND bug mechanism; every
+"same skill category" pair above uses a genuinely different mechanism, satisfying the
+master brief's diversity requirement (§18 of that brief) at the whole-suite level, not
+just within the 5 new projects.
+
+## 10. Node track solver-simulation and leakage findings
+
+All 5 required simulations (Projects 16-20) were run as genuinely isolated agents.
+Every one correctly solved its project. Three surfaced findings, all fixed and
+re-validated:
+
+| Project | Finding | Fix |
+|---|---|---|
+| 16 | Shared SKILL.md template's body text (not just the scope paragraph) still referenced "Python, FastAPI, Pydantic" from its Python-track origin; README overstated the failing-test count | Genericized the two body-text mentions (making the base template byte-for-byte reusable across both tracks, not just within one); corrected the README's test count |
+| 17 | Built concurrently with Project 16's fix, so it inherited the stale (un-genericized) SKILL.md | Applied the same genericization, confirmed via grep |
+| 18 | Two code docstrings (on the `sequence` field and the repository class) stated the intended pagination design (cursor-over-offset) and its rationale outright, pre-answering the specific judgment the README asks the candidate to demonstrate | Trimmed both to mechanical facts only, removing the design-rationale sentences; confirmed the README's naming of "cursor-based pagination" as the *required feature* (not the reasoning for it) was correctly left intact, since that's the task specification, not a spoiler |
+| 19 | No candidate-facing finding — a nudge toward the collision-safety consideration existed only in the *simulation's own instructions* (a deliberate probe), not in the real README/SKILL.md (confirmed via grep) | None needed; recorded as a methodology note |
+| 20 | No leakage found; solver correctly avoided the delegation-wiring trap and fixed both approve/reject without prompting | None needed |
+
+This 3-of-5 finding rate is consistent with the Python track's 6-of-12 rate and
+reflects the same intended process value: rule 34 exists to catch exactly this class
+of problem before a project is considered final, and every finding here was addressed
+before commit.
+
+## 11. Node track agent-independence and AI-skill audit status
+
+Complete for all 5 projects, same structure as §6 of this document. Every
+`ai_skill_audit.md` includes the leakage audit, the ~8-row simulated-prompt table, and
+the 5-point "Agent portability audit." No project assumes a specific AI vendor, IDE,
+or agent framework — `SKILL.md` remains pure behavioral policy text, injectable into
+any capable assistant exactly as described in `CURRICULUM.md`'s "Assessment format"
+section.
+
+## 12. Toolchain reliability note (Node track)
+
+`ts-jest` is incompatible with TypeScript 7's compiler API; a bare `npm install
+typescript` in a fresh environment can resolve to TS7 and silently break every test
+run with a confusing error. This was discovered and fixed BEFORE any project was
+built (verified via a throwaway toolchain test), by pinning `"typescript": "5.9.3"`
+in every project's `package.json`. Every project's fresh-install validation (a clean
+`rm -rf node_modules && npm install && npm test`, not just the builder agent's own
+install) confirmed this pin is sufficient and the toolchain is fully reproducible.
+This is documented once in root `CURRICULUM.md` rather than repeated per project,
+mirroring how the Python track's `pytest`-vs-`python3 -m pytest` environment quirk was
+handled.
