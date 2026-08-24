@@ -65,7 +65,9 @@ interleaved at difficulty comparable to their neighbors.
 full table. Every simulation correctly solved its project from candidate repo +
 README + SKILL.md alone, with no access to evaluator_private/. Six surfaced a
 leakage or difficulty-calibration finding; each was fixed and re-validated before
-the project was finalized.
+the project was finalized. The final one (Project 15, the capstone) solved cleanly
+with no leakage found and independently generalized its fix beyond what the
+reference solution required.
 
 ## AI-skill audits performed
 15 of 15 (one per project) — leakage audit + simulated-prompt table + agent
@@ -107,6 +109,11 @@ the start. See `GENERATION_STATE.md`'s "Notes / decisions" section and
 - The suite has not been reviewed by a human domain expert; it has been reviewed
   only by the generation process's own audits (interview-realism audit,
   AI-trivialization check, solver simulation) as documented per project.
+- A timing race during finalization briefly caused a background solver-simulation
+  agent's in-progress fix to Project 15 to be captured by an unrelated commit; this
+  was caught and corrected before publication via a full-suite test sweep across all
+  15 projects (see `MASTER_EVALUATOR.md` §8 for the full account). No other project
+  was affected.
 
 ## Exact command to begin Project 1
 

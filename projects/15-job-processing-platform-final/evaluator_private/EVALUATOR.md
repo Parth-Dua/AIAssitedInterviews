@@ -106,6 +106,51 @@ bug-finding side as well. See `ai_skill_audit.md`.
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
 
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug
+design, hidden tests, reference solution, or evaluator notes. This
+supersedes the authoring-time self-review noted above with a genuine
+independent solve, as that section recommended.
+
+Result: it correctly diagnosed the exact boolean-logic error (`status !=
+"running" and status == "queued"` collapses to `status == "queued"`),
+generalized the fix to also reject a duplicate finish on a `"failed"` job
+(not just `"completed"`), independently found and fixed the same missing-guard
+class in `start_job` (which the public tests don't cover — this was
+purely the candidate's own initiative, exactly the generalization signal
+this capstone is designed to reward), and implemented `cancel_job` with the
+correct guard rather than falling into the unconditional-cancel trap. It
+went further than the reference solution stylistically: it refactored all
+three guards into a single declarative transition table
+(`_ALLOWED_SOURCE_STATUSES`) consulted by one `_require_status` helper,
+and volunteered this exact design as its answer to the DEBRIEF question
+about more robust alternatives to ad-hoc boolean guards — independently
+arriving at materially the same "stretch-goal" observation `bug_design.md`
+notes as a discussion point. Estimated time: 60-80 minutes, judged by the
+simulation itself as an appropriate fit for a 75-90 minute capstone —
+hard enough that a candidate who doesn't truth-table the boolean expression
+would plausibly submit a partial fix (missing `"failed"` and/or the
+`start_job` gap), which is the intended difficulty signal.
+
+No leakage was found. It flagged two passages as worth a second look but
+judged neither a real problem: the repository-layout section names
+`job_service.py` as "Job lifecycle orchestration" (normal repo
+documentation, not a hint), and the feature-request bullet spells out the
+full cancellation guard rule in plain English (judged appropriate as a
+feature spec — a real PM would say exactly this — since it describes
+required behavior, not implementation). No revisions to the exercise were
+needed.
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits
+to `candidate/` were reverted after the simulation, restoring the original
+buggy/incomplete starting state, re-verified at 2 failed / 9 passed. Note
+for the record: a concurrent-commit race briefly caused the solver's fix to
+be committed to the repository by mistake — caught during this
+verification pass and corrected by restoring `candidate/` from the correct
+prior commit before finalizing.)
+
 ## Why this is a fitting capstone
 
 Every other project in this suite (Projects 1-14) asks the candidate to

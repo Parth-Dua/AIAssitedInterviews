@@ -140,9 +140,9 @@ difficulty-calibration issue that was fixed and re-validated before finalizing:
 | 12 | Two README passages over-explained the intended design/refactor | Both trimmed to behavioral requirements only |
 | 13 | Class + exception docstrings restated the README's policy next to the buggy code | Both trimmed |
 | 14 | — (clean) | none |
-| 15 | Pending at time of writing this section — see `GENERATION_STATE.md` for final status | — |
+| 15 | — (clean; solver independently generalized the fix beyond the reference solution and volunteered the same "transition table" design observation `bug_design.md` notes as a stretch goal) | none |
 
-This 6-of-11-completed-so-far leakage rate is the expected, useful output of rule 34
+This 6-of-12 leakage rate is the expected, useful output of rule 34
 — the process is designed to catch exactly this class of problem, and every finding
 was addressed before the project was considered final. Projects 1-3 were calibrated
 manually by the generator (establishing the template) rather than via isolated
@@ -193,9 +193,6 @@ agent's instructions, with no code in this repo assuming a specific vendor.
   process). This is the single biggest residual uncertainty in the suite: real human
   timing has not been observed, only inferred from bug complexity and comparison
   across projects.
-- **Project 15's fresh solver simulation was still in progress at authoring time**
-  for this section; see `GENERATION_STATE.md`/`GENERATION_REPORT.md` for its final
-  outcome.
 - **Environment quirk (not a curriculum defect):** in some sandboxes, a stray
   `pytest` executable on `PATH` resolves to a different Python environment than the
   one dependencies were installed into, producing a misleading
@@ -212,6 +209,14 @@ agent's instructions, with no code in this repo assuming a specific vendor.
   based, not process-hash-seeded) and re-run multiple times during validation, but
   this class of test is inherently a slightly softer signal than an exact-equality
   test.
+- **Process integrity note:** during finalization, a timing race briefly caused a
+  background solver-simulation agent's in-progress fix to Project 15 to be captured
+  by an unrelated documentation commit. This was caught during a final full-suite
+  test sweep (an unexpected jump from 11 to 20 tests) before publication, and
+  corrected by restoring `candidate/` from the correct prior commit — verified
+  against a full re-run of all 15 projects' test suites, confirming no other project
+  was similarly affected. Documented here and in `GENERATION_STATE.md` for
+  transparency rather than omitted.
 - **The two LLD projects share one trap shape (isinstance-branching)** — flagged
   above in §4 as intentional (it's the canonical LLD extensibility trap), but
   reviewers should not expect a THIRD distinct trap shape if this curriculum is ever

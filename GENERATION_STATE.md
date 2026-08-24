@@ -25,7 +25,7 @@ REVISE → FINALIZE.
 | 12 | feature-flag-engine-lld | done | done | done (10/10 fail as expected) | done (18/18 pass; isinstance-branching fails 4, hardcoded-order fails 1) | done (no leakage) | done (solved correctly, polymorphic; found+fixed 2 over-explicit README hints) | done | done |
 | 13 | llm-request-router | done | done | done (2 fail/6 pass) | done (12/12 pass; no-caching overcorrection fails 2) | done (no leakage) | done (solved correctly; found+fixed two docstring spoilers) | done | done |
 | 14 | interview-scheduling-hld | done | done | n/a (design deliverable; bonus algo 4/4 fail as expected) | done (bonus 12/12 pass incl. hidden) | done (no leakage) | done (strong design produced, ~45-60min, no leakage, no over-engineering) | done | done |
-| 15 | job-processing-platform-final | done | done | done (2 fail/9 pass) | done (20/20 pass; unconditional-cancel fails 8) | done (no leakage found; mechanical docstrings from the start) | in progress | pending | done |
+| 15 | job-processing-platform-final | done | done | done (2 fail/9 pass) | done (20/20 pass; unconditional-cancel fails 8) | done (no leakage found) | done (solved correctly, generalized fix independently, ~60-80min, no leakage) | done | done |
 
 ## Notes / decisions
 
@@ -45,3 +45,12 @@ REVISE → FINALIZE.
   proprietary/vendor-specific feature required; a future runner could swap providers
   without changing the problem). Project 1 retrofitted. Projects built after this point
   include both from the start.
+- **Process note:** a background solver-simulation agent's in-progress fix to Project
+  15's candidate/ was briefly captured by an unrelated `git add -A && git commit`
+  (the "Add MASTER_EVALUATOR.md..." commit) due to a timing race — caught during
+  final verification (test count jumped from 11 to 20 unexpectedly) and corrected by
+  restoring `candidate/` from the prior correct commit before finalizing. No other
+  project was affected (this was checked for specifically). This class of race was
+  otherwise avoided throughout generation by always checking `git status`/rerunning
+  `pytest` immediately before every commit and treating any unexpected diff as a
+  signal to check for a live background agent first.
