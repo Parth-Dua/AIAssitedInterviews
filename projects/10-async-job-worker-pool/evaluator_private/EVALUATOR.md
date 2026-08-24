@@ -91,3 +91,28 @@ is present), and explanation themselves. See `ai_skill_audit.md`.
 ## Agent independence
 No part of grading references which AI product the candidate used. Grade
 the candidate's diff, tests, and explanation only.
+
+## Fresh solver simulation (validation record)
+
+Run per rule 34: an isolated agent received only `candidate/README.md`,
+`candidate/.ai/assessment-skill/SKILL.md`, and repo access — no bug design,
+hidden tests, reference solution, or evaluator notes. Result: it correctly
+diagnosed the lost-update race (await sitting between read and write of
+`_remaining`, no lock), correctly ruled out the off-by-one hypothesis using
+the `call_count` evidence, and fixed it with a per-batch `asyncio.Lock`
+(one of the two documented acceptable fixes). It independently re-verified
+determinism across 8+ runs both before and after its fix, with zero
+flakiness observed, confirming the design goal from the build brief. Time
+estimate: 30-60 minutes for a candidate with light asyncio exposure —
+inside the 60-90 minute timebox.
+
+No leakage or realism issues were found; it explicitly called out that
+`JobBatchTracker`'s docstring ("finalized exactly once... regardless of how
+many workers are reporting completions... at the same time") is a fair,
+necessary specification of the class's contract rather than a hint — the
+same judgment call made and validated on Project 1's pricing-rules
+docstring precedent. No revisions to the exercise were needed.
+
+It confirmed it never accessed anything outside `candidate/`. (Its edits to
+`candidate/` were reverted after the simulation, restoring the original
+buggy starting state, re-verified at 1 failed / 5 passed.)
