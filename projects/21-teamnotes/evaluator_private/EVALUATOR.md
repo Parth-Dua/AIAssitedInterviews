@@ -115,6 +115,46 @@ must drive the discovery themselves even if their assistant could
 technically find the bug quickly once told to run the actual reproduction
 sequence.
 
+## Fresh black-box solver simulation (validation record)
+
+Run per rules 14/34 (this project's own build brief, applying the same standard as
+the rest of the curriculum, adapted for black-box discovery): an isolated agent
+received only `candidate/README.md` and `candidate/.ai/assessment-skill/SKILL.md` —
+no root-cause notes, hidden tests, reference solution, or evaluator material — and
+was explicitly instructed NOT to read `src/`/`tests/` until after exploring the
+running application. Result: the format works as intended. The agent discovered the
+problem primarily through USING the running app (starting the dev server and issuing
+HTTP requests, not reading source first), constructed a reliable, fully deterministic
+reproduction in ~6-8 exploratory requests, correctly generalized to test the
+two-full-edits-racing case (not just the quick-tag angle) before finalizing its fix,
+and explicitly rejected a narrower frontend-only fix as insufficient — all in an
+estimated 50-75 minutes total, comfortably inside the 90 minute timebox.
+
+**Finding that caused a revision:** the agent flagged that two code comments in
+`public/app.js` narrated the exact mechanism of the race condition rather than just
+describing what the code does — one on `quickAddTag` ("has no knowledge of (and no
+way to reach) any edit form that might currently be open for this same note in
+another part of the page") and one on `openEditView` ("keeps that snapshot...until
+Save is clicked. It does not re-fetch the note before submitting."). Read together,
+these two comments state the entire race-condition story a candidate is supposed to
+piece together themselves through exploration — the same class of spoiler already
+caught and fixed in backend code comments on Projects 5, 6, 8, 9, 13, 18, applied here
+to frontend comments for the first time in the black-box tier. **Fix applied:**
+trimmed both to purely mechanical descriptions of what each function does (loads a
+note into the form; posts a tag and updates one row), with the causal/implication
+language removed. The README's own explicit framing of quick-add-tag as a distinct
+action from the full edit form was left untouched — the agent separately judged that
+framing fair and non-revealing (a legitimate product description, not a spoiler),
+consistent with how prior projects have distinguished business-rule statements
+(README, allowed) from mechanism-revealing statements (code comments, not allowed).
+Public test pass/fail split re-verified unchanged (21/21 pass) after the edit —
+comment-only change, no logic touched.
+
+It confirmed it never accessed anything outside `candidate/`, and confirmed the dev
+server was killed at the end of its session. (Its code edits were reverted after the
+simulation, then the comment fixes were applied and re-validated, restoring the
+original starting state.)
+
 ## Agent independence
 
 No part of grading references which AI product the candidate used. Grade

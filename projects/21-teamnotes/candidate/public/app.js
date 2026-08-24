@@ -49,9 +49,7 @@ async function loadList() {
 }
 
 // Quick-add-tag: a small per-row control on the list view. Posts directly
-// to the tags endpoint and updates just this row. It has no knowledge of
-// (and no way to reach) any edit form that might currently be open for
-// this same note in another part of the page.
+// to the tags endpoint and updates just this row.
 async function quickAddTag(id, inputEl, rowEl) {
   const tag = inputEl.value.trim();
   if (!tag) {
@@ -75,9 +73,7 @@ async function quickAddTag(id, inputEl, rowEl) {
   inputEl.value = '';
 }
 
-// Edit view: loads the note once when opened and keeps that snapshot
-// (including its version) in the form until Save is clicked. It does not
-// re-fetch the note before submitting.
+// Edit view: loads the note when opened and populates the form fields.
 async function openEditView(id) {
   const res = await fetch(`/notes/${id}`);
   const note = await res.json();
