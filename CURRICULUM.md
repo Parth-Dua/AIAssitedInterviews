@@ -1,10 +1,13 @@
 # Backend Interview Practice Suite — Curriculum
 
-A private, 20-project curriculum simulating real software-engineering interviews and
+A private, 22-project curriculum simulating real software-engineering interviews and
 online assessments (SWE Intern / New Grad / Backend / AI-Engineering-with-SWE-signal).
 Projects 1-15 are Python/FastAPI. Projects 16-20 are Node.js/TypeScript/Express,
 purpose-built for Amazon-style repo-based debugging OAs (see §"Node/Express track"
-below) — same conventions, same rigor, different stack.
+below). Projects 21-22 are a **black-box full-app debugging** tier (see §"Black-box
+full-app debugging tier" below) — a structurally different, deliberately
+above-typical-OA-difficulty pair meant for skill *development*, not just assessment
+practice. Same underlying candidate/evaluator_private convention throughout.
 
 Every project lives at `projects/NN-slug/` and contains:
 
@@ -57,6 +60,8 @@ interpreter `pip3`/`pip install` targeted.
 | 18 | Shared Playlist API (Node) | Debugging + Feature | Debugging/Implementation | 7/10 | 60-75m | Uniqueness-check bugs, cursor vs. offset pagination |
 | 19 | Product Price Lookup Service (Node) | Advanced Debugging | Debugging | 8/10 | 60-75m | Cache-key construction, external client abstraction, fallback reasoning |
 | 20 | Expense Approval Platform (Final, Node) | Integrated Debugging | Debugging (+feature) | 8.5/10 | 60-90m | Coarse vs. resource-level authorization, feature-driven generalization |
+| 21 | TeamNotes (Black-Box) | Black-Box Full-App Debugging | Debugging | 8.5-9/10 | 90m | Discover-through-usage, optimistic concurrency, one invariant / two symptoms |
+| 22 | Neighborhood Marketplace (Black-Box, Final) | Black-Box Full-App Debugging | Debugging | 9/10 | 105m | Discover-through-usage, cache/lazy-expiry divergence, rejecting an incomplete fix |
 
 **Distribution:** 8 debugging-heavy (1,2,3,4,5,6,7,9 primary; 15 counted as debugging-heavy
 final), 3 implementation/feature-extension (5,6,8 have substantial feature work; 13 is
@@ -69,11 +74,16 @@ capstone — mirroring the shape of the Python 1→15 progression at a compresse
 
 Difficulty rises 1→15, then rises again 16→20 within the Node track (the Node track is
 not a continuation of the Python difficulty numbers — 16 is comparable to Python's
-fundamentals tier, not to Python 15/16-in-sequence). Do them roughly in order the first
-time through; revisit any project where your process (not just your final diff) felt
-weak. If you're specifically practicing for a Node/Express-based OA (e.g. Amazon-style),
-you can go straight to 16-20 without doing 1-15 first — the Node track is self-contained
-and doesn't assume you've done the Python projects.
+fundamentals tier, not to Python 15/16-in-sequence). Projects 21-22 sit above BOTH
+tracks deliberately — they're the hardest and second-hardest projects in the whole
+curriculum, on purpose, as a capstone skill-building pair rather than assessment
+calibration (see below). Do 1-20 roughly in order the first time through; revisit any
+project where your process (not just your final diff) felt weak; attempt 21-22 only
+once you're comfortable with everything else. If you're specifically practicing for a
+Node/Express-based OA (e.g. Amazon-style), you can go straight to 16-20 without doing
+1-15 first — the Node track is self-contained and doesn't assume you've done the
+Python projects; 21-22 assume nothing except general backend comfort either, though
+they're calibrated above intern/new-grad OA difficulty by design.
 
 ## Node/Express track (Projects 16-20)
 
@@ -94,6 +104,40 @@ cd projects/16-team-task-board/candidate
 npm install
 npm test
 ```
+
+## Black-box full-app debugging tier (Projects 21-22)
+
+Projects 21-22 are structurally different from every other project in this suite, and
+you should know how before you start one.
+
+**Every project 1-20 tells you what's broken** (a bug report in the README, a failing
+public test, or both). **Projects 21-22 do not.** Each ships a real, working,
+minimal frontend (plain HTML/CSS/vanilla JS, no framework, no build step — served by
+the same Express app) on top of an unfamiliar backend. Nearly all public tests pass
+on the starting code. Your job starts with *using the running application* to find
+something that doesn't behave the way it should, before you ever open the source.
+Only once you've reproduced a concrete problem does this become a normal debugging
+task: trace it, form hypotheses, fix it, and write your own regression test — nobody
+hands you one.
+
+This trains a specific, different skill from Projects 1-20: being dropped into an
+unfamiliar *product*, not just an unfamiliar *codebase* — observe → reproduce → trace
+→ hypothesize → test the hypothesis → identify the underlying invariant → fix →
+regression test → verify end-to-end. It's deliberately calibrated slightly above
+typical intern/new-grad OA difficulty (8.5-9/10) because the goal here is skill
+development, not assessment-difficulty matching.
+
+```
+cd projects/21-teamnotes/candidate
+npm install
+npm run dev
+# open http://localhost:3000 in a browser, or curl the API directly
+```
+
+Both projects include debug utilities (documented plainly in each README) —
+`POST /debug/reset` to restore seed data, and, for Project 22, `POST
+/debug/advance-time` to deterministically fast-forward time-based behavior without
+waiting. These are normal assessment-environment infrastructure, not spoilers.
 
 ## Assessment format (for tooling, not required reading to attempt a project)
 
