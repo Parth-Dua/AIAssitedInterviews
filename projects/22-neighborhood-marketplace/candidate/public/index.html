@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Neighborhood Marketplace</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<header>
+  <h1>Neighborhood Marketplace</h1>
+</header>
+
+<main>
+  <section id="list-view">
+    <div class="list-view-header">
+      <h2>Listings</h2>
+      <button id="new-listing-btn">+ New listing</button>
+    </div>
+
+    <div id="new-listing-form" class="new-listing-form hidden">
+      <input id="new-listing-title" type="text" placeholder="Title" />
+      <input id="new-listing-price" type="number" min="0" step="1" placeholder="Price (0 for free)" />
+      <div class="form-actions">
+        <button id="create-listing-btn">Create</button>
+        <button id="cancel-new-listing-btn" class="secondary">Cancel</button>
+      </div>
+    </div>
+
+    <ul id="listings-list"></ul>
+  </section>
+
+  <section id="detail-view" class="hidden">
+    <button id="back-btn" class="link-btn">&larr; Back to listings</button>
+    <h2 id="detail-title"></h2>
+    <p id="detail-price" class="detail-price"></p>
+    <p id="detail-status" class="detail-status"></p>
+    <div class="form-actions">
+      <button id="reserve-btn">Reserve</button>
+      <button id="purchase-btn">Purchase</button>
+    </div>
+    <p id="detail-message" class="message"></p>
+  </section>
+
+  <section id="debug-panel">
+    <h2>Testing tools</h2>
+    <p class="debug-note">
+      These controls exist to make it easier to explore and test this app.
+      They are not part of the normal product experience.
+    </p>
+    <div class="form-actions">
+      <button id="advance-time-btn" class="secondary">Advance time</button>
+      <button id="reset-btn" class="secondary">Reset data</button>
+    </div>
+    <p id="debug-status" class="debug-note"></p>
+  </section>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>
