@@ -1,12 +1,13 @@
 # Generation Report
 
 ## Total projects
-20 of 20 built and validated: the original 15-project Python/FastAPI suite (Projects
-1-15), plus a 5-project Node.js/TypeScript/Express track (Projects 16-20) added by a
-subsequent user request, calibrated to Amazon-style repo-based debugging OAs. (A
-further black-box full-app debugging tier, Projects 21-22, was requested after this
-report was first finalized and is tracked in `GENERATION_STATE.md`; this report is
-updated again once that tier completes.)
+22 of 22 built and validated: the original 15-project Python/FastAPI suite (Projects
+1-15); a 5-project Node.js/TypeScript/Express track (Projects 16-20) added by a
+subsequent user request, calibrated to Amazon-style repo-based debugging OAs; and a
+2-project black-box full-app debugging tier (Projects 21-22) added by a further user
+request — structurally distinct from every other project (real minimal frontend, no
+README bug report, discovery through application usage), deliberately calibrated
+above typical intern/new-grad OA difficulty (8.5-9/10) for skill development.
 
 ## Validation status
 Every project passed the full autonomous quality loop (design → implement correct
@@ -44,6 +45,18 @@ also passing some public tests it shouldn't have fully "solved" — documented p
 project). Project 17's async-hang reproduction was independently re-run 3 times fresh
 to confirm determinism (no real timers, no flakiness).
 
+For the black-box tier (21-22): a structurally different validation shape, since the
+starting candidate state's public tests are designed to ALL (or nearly all) pass —
+the opposite of every other project's validation step. Both were verified to produce
+exactly this (21/21 and 25/25 respectively, the latter across 3 fresh-install runs to
+confirm determinism given the injectable-clock time-advance mechanism). The bug in
+each was independently reproduced by the orchestrator via raw `curl` requests against
+a live `npm run dev` server (not just unit tests) before and after applying the
+reference fix, confirming the defect is real and observable through the actual
+running application, not merely encoded in a test assertion. Both tempting-but-
+incomplete fixes were verified to fail their targeted hidden tests while the
+candidate-visible public suite kept passing throughout.
+
 See `GENERATION_STATE.md` for the per-project validation matrix and
 `MASTER_EVALUATOR.md` for the full private curriculum review (concept coverage,
 duplicate-skill analysis, solver-simulation findings, realism audit).
@@ -52,15 +65,16 @@ duplicate-skill analysis, solver-simulation findings, realism audit).
 
 | Category | Projects | Count |
 |---|---|---|
-| Debugging-heavy (primary) | 1, 2, 3, 4, 9, 10, 15, 16, 17, 19 | 10 |
+| Debugging-heavy (primary) | 1, 2, 3, 4, 9, 10, 15, 16, 17, 19, 21, 22 | 12 |
 | Debugging + feature implementation | 5, 6, 7, 8, 13, 18, 20 | 7 |
 | Low-level design | 11, 12 | 2 |
 | AI-engineering backend | 13 | 1 (also counted above as implementation) |
 | High-level design | 14 | 1 |
+| Black-box full-app debugging | 21, 22 | 2 (also counted above as debugging-heavy) |
 
 Debugging is the dominant category throughout the suite, consistent with master
-spec §2/§4's requirement, and remains dominant after the Node track's addition
-(10 primarily-debugging projects across both stacks, plus 15 and 20 each counting as
+spec §2/§4's requirement, and remains dominant after both extensions (12
+primarily-debugging projects across all three tiers, plus 15 and 20 each counting as
 debugging-heavy final/capstone projects despite including a feature).
 
 ## Interview-format coverage
@@ -69,10 +83,12 @@ Debugging + Feature Implementation (B): 5, 6, 7, 8, 13, 15, 18, 20.
 Existing-code implementation task (C): feature portions of 5, 6, 7, 8, 13, 18, 20.
 Low-Level Design (D): 11, 12.
 High-Level Design (E): 14.
-All five formats from the master spec are represented in both the Python and Node
-tracks (except LLD/HLD, deliberately Python-only per the original spec's "use
-sparingly" guidance for HLD and the Node track's focus on repo-debugging OA
-calibration rather than design rounds).
+Black-Box Full-App Debugging (a sixth format, beyond the original master spec's five,
+added per the tier-21-22 request): 21, 22.
+All five original formats are represented in both the Python and Node tracks (except
+LLD/HLD, deliberately Python-only per the original spec's "use sparingly" guidance
+for HLD and the Node track's focus on repo-debugging OA calibration rather than
+design rounds).
 
 ## Difficulty distribution
 Python track: 1-4: 5-6/10 (45-60m). 5-8: 6-7/10 (60-75m). 9-10: 8/10 (60-90m). 11-12:
@@ -82,23 +98,35 @@ at difficulty comparable to their neighbors.
 Node track (independent progression, not a continuation of the Python numbering —
 16 is comparable to Python's fundamentals tier): 16: 6/10 (45-60m). 17: 7/10 (45-60m).
 18: 7/10 (60-75m). 19: 8/10 (60-75m). 20: 8.5/10 (60-90m).
+Black-box tier (deliberately above both other tiers, and above the two other
+capstones — 15 and 20 — as the two hardest projects in the curriculum): 21: 8.5-9/10
+(90m). 22: 9/10 (105m), the single hardest project in the whole suite.
 
 ## Solver simulations performed
-17 of 17 required (rule 34, Python projects 4-15 + all of Node projects 16-20) — see
-`MASTER_EVALUATOR.md` §5 for the full table. Every simulation correctly solved its
-project from candidate repo + README + SKILL.md alone, with no access to
-evaluator_private/. Nine surfaced a leakage or difficulty-calibration finding (six in
-the Python track, three in the Node track); each was fixed and re-validated before
-the project was finalized. Project 15 (Python capstone) and Project 20 (Node capstone)
-both solved cleanly with no leakage found, and both independently generalized their
-fix beyond the minimum the reported bug required.
+19 of 19 required (rule 34, Python projects 4-15 + all of Node projects 16-20 + both
+black-box projects 21-22) — see `MASTER_EVALUATOR.md` §5, §10, and §13 for the full
+tables. Every simulation correctly solved its project from candidate repo + README +
+SKILL.md alone, with no access to evaluator_private/; the two black-box simulations
+were additionally instructed not to read source code until after exploring the
+running application, and both complied and discovered their bugs primarily through
+usage. Eleven surfaced a leakage or difficulty-calibration finding (six in the Python
+track, three in the Node track, two in the black-box tier — the black-box tier's
+findings were both frontend code comments, a first for this curriculum); each was
+fixed and re-validated before the project was finalized. Project 15 (Python capstone),
+Project 20 (Node capstone), and Project 22 (black-box capstone, the curriculum's
+hardest project) all solved cleanly with no leakage found in their final validated
+state, and all three independently generalized their fix beyond the minimum the
+reported problem required.
 
 ## AI-skill audits performed
-20 of 20 (one per project) — leakage audit + simulated-prompt table + agent
-portability audit, in every `evaluator_private/ai_skill_audit.md`.
+22 of 22 (one per project) — leakage audit + simulated-prompt table + agent
+portability audit, in every `evaluator_private/ai_skill_audit.md`. The black-box
+tier's SKILL.md additionally includes a "Black-box discovery phase" section (guarding
+against the assistant naming the bug/location before the candidate has done real
+exploration), also audited for leakage.
 
 ## Agent-independence audit status
-Complete for all 20 projects. Every `SKILL.md` is written as vendor-neutral
+Complete for all 22 projects. Every `SKILL.md` is written as vendor-neutral
 behavioral policy (no tool names, no permission-system assumptions, no
 vendor-specific mechanics) and is Project 1's text verbatim except each project's
 final scope paragraph — including across the stack boundary: Project 16's solver
@@ -107,7 +135,7 @@ shared template's body text (not just the per-project scope paragraph) mentioned
 stack-specific examples; those were genericized so the SAME base SKILL.md text is now
 byte-for-byte reusable across both the Python and Node tracks, not just within one.
 Every `assessment.yaml` (added mid-generation per an explicit user request,
-retrofitted onto Projects 1-3 and present from the start in 4-20) separates policy
+retrofitted onto Projects 1-3 and present from the start in 4-22) separates policy
 (SKILL.md) from enforcement (candidate_access/blocked_access), confirmed workable
 with any capable coding agent, not a specific product.
 
@@ -123,9 +151,16 @@ with any capable coding agent, not a specific product.
    validation loop) on a new stack, purpose-built for Amazon-style repo-debugging
    OA practice. Nothing in Projects 1-15 was modified to accommodate this beyond
    adding `node_modules/`/`dist/` to the repo `.gitignore`.
+3. A third user-requested update extended the suite with a 2-project black-box
+   full-app debugging tier (Projects 21-22), the hardest projects in the
+   curriculum, adding a minimal static frontend (served by the same Express app,
+   no framework/build step) and shifting the discovery model from "README/test
+   names the bug" to "candidate discovers it through application usage." Nothing
+   in Projects 1-20 was modified to accommodate this.
 
 See `GENERATION_STATE.md`'s "Notes / decisions" section and `CURRICULUM.md`'s
-"Assessment format" / "Node/Express track" sections for details.
+"Assessment format" / "Node/Express track" / "Black-box full-app debugging tier"
+sections for details.
 
 ## Known limitations
 
@@ -146,13 +181,26 @@ See `GENERATION_STATE.md`'s "Notes / decisions" section and `CURRICULUM.md`'s
 - The suite has not been reviewed by a human domain expert; it has been reviewed
   only by the generation process's own audits (interview-realism audit,
   AI-trivialization check, solver simulation) as documented per project.
-- A timing race during finalization briefly caused a background solver-simulation
-  agent's in-progress fix to Project 15 to be captured by an unrelated commit; this
-  was caught and corrected before publication via a full-suite test sweep across all
-  15 projects (see `MASTER_EVALUATOR.md` §8 for the full account). No other project
-  was affected.
+- Two separate timing races during finalization briefly caused a background
+  solver-simulation agent's in-progress fix (Project 15, then again around Project
+  20's toolchain files) to be captured by an unrelated commit; both were caught and
+  corrected before publication via full-suite test sweeps (see `MASTER_EVALUATOR.md`
+  §8 and §14 for the full account). A final, independent full-suite sweep across all
+  22 projects (fresh `pytest`/`npm install && npm test` for every one, not relying on
+  any builder or solver-sim agent's own runs) was performed immediately before this
+  report was last finalized, and found no further instances.
+- The black-box tier's "discoverability" property (§13 of `MASTER_EVALUATOR.md`) was
+  validated by exactly two fresh-solver simulations per project (one for TeamNotes,
+  one for Neighborhood Marketplace). This is a smaller validation sample than would
+  be ideal for a format this novel to the curriculum; a human pilot (or additional
+  independent solver runs) would strengthen confidence further, particularly for
+  Project 22 where the solver's own report noted its first reproduction attempt
+  initially looked clean due to call-ordering, before it deliberately varied the
+  ordering and found the real bug — a sign the discovery signal, while sufficient,
+  is not maximally forgiving of a candidate's exploration strategy on a first pass.
 
-## Exact command to begin Project 1 (Python track) or Project 16 (Node track)
+## Exact command to begin Project 1 (Python track), Project 16 (Node track), or
+## Project 21 (black-box tier)
 
 ```bash
 # Python track
@@ -166,4 +214,11 @@ cd projects/16-team-task-board/candidate
 cat README.md
 npm install
 npm test
+
+# Black-box tier (start the app and explore it — don't read src/ first)
+cd projects/21-teamnotes/candidate
+cat README.md
+npm install
+npm run dev
+# open http://localhost:3000
 ```

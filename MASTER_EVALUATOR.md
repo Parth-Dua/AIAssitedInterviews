@@ -322,3 +322,71 @@ install) confirmed this pin is sufficient and the toolchain is fully reproducibl
 This is documented once in root `CURRICULUM.md` rather than repeated per project,
 mirroring how the Python track's `pytest`-vs-`python3 -m pytest` environment quirk was
 handled.
+
+## 13. Black-box full-app debugging tier (Projects 21-22) — design and calibration
+
+Added by a second, subsequent user request. Structurally distinct from every prior
+project: no README bug report, no failing public test announces the problem, and a
+real minimal frontend (static HTML/CSS/vanilla JS served by the same Express app, no
+build tooling) is the discovery surface. Per that request's own framing, this tier
+trains a specific skill — being dropped into an unfamiliar *product* and discovering
+incorrect behavior through use, not just an unfamiliar *codebase* with a bug already
+named — and is deliberately calibrated ABOVE typical intern/new-grad OA difficulty
+(8.5-9/10) for skill development rather than assessment-difficulty matching.
+
+**Format validation is the central question for this tier**, more so than for any
+other: does "discover through usage" actually work, or does a capable agent just read
+the source and shortcut the discovery phase? Both fresh solver simulations (run with
+an explicit instruction not to read `src/`/`tests/` until after exploring the running
+app) confirm it works as intended:
+
+- **Project 21 (TeamNotes):** discovered primarily through issuing HTTP requests
+  against the running app (not source-reading-first), in ~6-8 exploratory requests,
+  fully deterministic reproduction, generalized its fix beyond the first symptom
+  found (explicitly tested the two-full-edits-racing case before finalizing).
+- **Project 22 (Neighborhood Marketplace, the hardest project in the whole
+  curriculum):** the solver's FIRST attempt looked clean purely due to call
+  ordering — it recognized this, deliberately varied the ordering as a strategy
+  (comparing the same data through different views, across different orderings), and
+  found the real divergence on a second pass. It independently formed and disproved
+  a wrong hypothesis (wall-clock TTL) before confirming the write-triggered
+  invalidation pattern, then explicitly rejected a TTL-shortening "fix" with correct
+  reasoning about why it doesn't address the underlying invariant.
+
+Both bugs are built on an injectable/advanceable fake clock (mirroring the Python
+track's determinism convention, now exposed to a human candidate as an honest
+`/debug/advance-time` testing utility) rather than real timers, so every reproduction
+— by the solver simulations and by the orchestrator's own independent manual `curl`
+verification against a live `npm run dev` server for both projects — was confirmed
+fully deterministic, with zero real wall-clock waiting required.
+
+**Leakage findings (2 of 2 simulations):** Project 21's simulation flagged two
+FRONTEND code comments (not backend, a first for this curriculum) that narrated the
+exact race-condition mechanism the candidate is meant to piece together themselves;
+both were trimmed to purely mechanical descriptions. Project 22's simulation found
+no leakage — its one candidate finding (a repository class's honest doc comment) was
+explicitly judged non-revealing, consistent with how equivalent scaffolding-vs-leak
+calls have been resolved throughout this curriculum (§10 above; also Python Projects
+4, 10, 14).
+
+**Cross-tier diversity:** neither black-box project repeats a bug mechanism from
+Projects 1-20. Project 21's stale-full-object-overwrite-without-version-check is
+distinct from every PATCH/update bug in the suite (Python 1, 3; Node 16) — those are
+either a variable mixup or a hardcoded override; 21's is a genuine missing
+optimistic-concurrency check, discovered through a TIME-ordered interaction between
+two different endpoints rather than a single endpoint's internal logic. Project 22's
+cache-invalidation-blind-to-a-lazy-read-triggered-state-change is a fourth distinct
+cache-bug angle in the curriculum (after Python 6's invalidation-on-write gap, Python
+13's cache-by-provenance gap, and Node 19's cache-key-construction gap) — none of the
+other three involves a STATE CHANGE THAT ISN'T CAUSED BY AN EXPLICIT WRITE AT ALL,
+which is the genuinely new mechanism here.
+
+## 14. Final integrity note
+
+Before finalizing, every one of the 22 projects' candidate test suites was re-run
+fresh (Python: direct `python3 -m pytest -q`; Node: `rm -rf node_modules && npm
+install && npm test`) in a single sweep, independent of any builder or solver-sim
+agent, confirming every project's buggy/incomplete starting state still produces
+exactly its intended public-test pass/fail split. This also served as the final
+check for the class of git-commit race documented in §8's "Process integrity note" —
+no further instances were found across Projects 16-22.
