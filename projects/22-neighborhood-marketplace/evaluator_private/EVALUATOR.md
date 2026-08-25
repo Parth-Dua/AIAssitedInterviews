@@ -154,6 +154,50 @@ candidate must drive the discovery themselves even if their assistant could
 technically find the bug quickly once told to run the actual reproduction
 sequence.
 
+## Fresh black-box solver simulation (validation record)
+
+Run per rules 14/34, applying the same black-box standard established on Project 21:
+an isolated agent received only `candidate/README.md` and
+`candidate/.ai/assessment-skill/SKILL.md`, was explicitly instructed not to read
+`src/`/`tests/` until after exploring the running app, and had no access to
+`evaluator_private/`. Result: this is the strongest validation in the whole
+curriculum for the discovery format specifically. The agent's FIRST reproduction
+attempt looked clean (the list "self-corrected") purely because of call ordering
+(it hadn't populated the list cache before advancing time); it recognized this,
+deliberately varied the ordering ("compare views, vary ordering" — a strategy it
+attributes to the task's own instruction to compare views across time, not
+something it stumbled onto by luck), and found the real divergence on the second
+attempt. It independently formed and disproved a wrong hypothesis (wall-clock TTL
+cache — disproved by polling for 30 real seconds with no change) before reserving
+an unrelated listing to confirm invalidation is write-triggered, exactly the
+evidence-gathering sequence `bug_design.md`'s "expected reasoning" describes. It
+considered and explicitly rejected the TTL-shortening fix with the correct
+reasoning (decoupled from *when* a specific reservation actually expires; hides
+rather than fixes the defect). All in a full, clean session; `npm test` 28/28 (25
+public + 3 of its own regression tests) across 3 consecutive runs.
+
+No leakage was found. It explicitly flagged `ListingsCache`'s own doc comment
+("no logic of its own about when a snapshot should be considered stale — that's
+entirely the caller's responsibility") as accurate context read only AFTER it had
+already found the bug through the app, not a giveaway — consistent with how
+similarly-worded, honestly-documented GIVEN/correct code has been judged
+throughout this curriculum (e.g. Projects 4, 10, 14). It rated the 105-minute
+timebox as "about right, maybe slightly generous" for a candidate who reads the
+README's cross-view-comparison guidance carefully, but "tight" for one who
+doesn't immediately think to vary call ordering around the time-advance — judged
+an accurate, not alarming, characterization of an intentionally hard, final
+project, not a signal requiring revision.
+
+No revisions to the exercise were needed. It confirmed it never accessed
+anything outside `candidate/`, and confirmed the dev server was killed and its
+absence verified via `ps`, `lsof`, and a refused `curl`. (Its code edits were
+reverted after the simulation, restoring the original buggy starting state,
+re-verified at 25/25 public tests passing.)
+
+This is the final solver simulation of the full 22-project curriculum. All 12
+Python-track (Projects 4-15), 5 Node-track (Projects 16-20), and 2 black-box-tier
+(Projects 21-22) fresh solver simulations are now complete and recorded.
+
 ## Agent independence
 
 No part of grading references which AI product the candidate used. Grade

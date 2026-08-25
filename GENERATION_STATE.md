@@ -53,7 +53,7 @@ their own regression test after discovering the problem.
 | # | Slug | Design | Candidate built | Public tests behave as intended | Hidden tests + ref solution validated | SKILL.md leakage audit | Solver sim | Realism audit | Committed |
 |---|------|--------|------------------|----------------------------------|-----------------------------------------|--------------------------|------------|----------------|-----------|
 | 21 | teamnotes | done | done | done (21/21 pass on buggy state — discovery-through-usage design confirmed) | done (26/26 pass; tags-merge-only tempting fix fails on lost-content-update hidden test) | done (no leakage) | done (discovered primarily via usage not code-reading, ~50-75min, reliable/deterministic repro; found+fixed 2 frontend spoiler comments) | done | done |
-| 22 | neighborhood-marketplace | done | pending | | | | | | |
+| 22 | neighborhood-marketplace | done | done | done (25/25 pass on buggy state, deterministic across 3+ runs) | done (30/30 pass; TTL-shortening tempting fix fails 4/5 hidden) | done (no leakage) | done (discovered via usage with deliberate ordering strategy, correctly rejected TTL trap, fully deterministic, no leakage) | done | done |
 
 ## Notes / decisions
 
